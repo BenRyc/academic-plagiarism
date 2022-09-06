@@ -5,7 +5,7 @@ class Room:
         self.corner2 = (x2, z2)
         self.y = y
 
-        self.palet = palet
+        self.palette = palette
 
         self.doors = doors
         self.decor = decor
