@@ -2,45 +2,37 @@ from mcpi import block
 import random
 
 class housePalette():
-    def __init__(self):
-        self.Trim = None
-        self.Floor = None
-        self.Walls = None
-        self.Ceiling = None
-        self.Roof = None
-        
-    def initOak(self):
-        self.Trim = block.WOOD.withData(0)
-        self.Floor = block.WOOD_PLANKS
-        self.Walls = block.WOOD_PLANKS
-        self.Ceiling = block.STONE_BRICK
-        self.Roof = block.STAIRS_COBBLESTONE
-        
+    def __init__(self, trim=None, floor=None, walls=None, ceiling=None, roof=None):
+        self.trim = trim
+        self.floor = floor
+        self.walls = walls
+        self.ceiling = ceiling
+        self.roof = roof
+
     def returnPalette(self):
-        palette = []
         
-        palette.append(self.Trim)
-        palette.append(self.Floor)
-        palette.append(self.Walls)
-        palette.append(self.Ceiling)
-        palette.append(self.Roof)
-        
-        return palette
+        return f'trim:{self.trim}, floor:{self.floor}, walls:{self.walls}, ceiling:{self.ceiling}, roof:{self.roof}'
         
         
-def palletePicker():
-    newHouse = housePalette()
-    
-    #Edit below to how many palettes there are
-    numOfPalettes = 1
-    #^^^^^^^^^^^^^^^^
-    
-    choice = random.randint(0, numOfPalettes-1)
-    
-    if choice == 0:
-        newHouse.initOak()
-        return newHouse.returnPalette()
-    
-    else:
-        newHouse.initOak()
-        return newHouse.returnPalette()
+    def pickPalette(self):
+        trimOptions = [block.WOOD]
+        floorOptions = [block.WOOD]
+        wallOptions = [block.WOOD]
+        ceilingOptions = [block.WOOD]
+        roofOptions = [block.WOOD]
+
+        allOptions = [trimOptions, floorOptions, wallOptions, ceilingOptions, roofOptions]
+        choicesArr = []
+
+        #choose palette 
+        for arr in allOptions:
+            choiceInt = random.randint(0, len(arr)-1)
+            choicesArr.append(arr[choiceInt])
+
+        #change house attributes
+        self.trim = choicesArr[0]
+        self.floor = choicesArr[1]
+        self.walls = choicesArr[2]
+        self.ceiling = choicesArr[3]
+        self.roof = choicesArr[4]
+
