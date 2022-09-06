@@ -1,13 +1,22 @@
 from mcpi.minecraft import Minecraft
+from mcpi import block
 
+def isAirBelow(x,y,z):
+    if (Minecraft.create().getBlock(x, y-1, z) == block.AIR.id):
+        return True
+    else:
+        return False
+    
 mc = Minecraft.create()
 player = mc.player
 
-position = player.getPos()
+origin = player.getPos()
+
+if isAirBelow(origin.x, origin.y-1, origin.z):
+    mc.postToChat("Yes")
+
+else:
+    mc.postToChat("No")
 
 
-player.setPos(position.x-1,position.y,position.z-1)
 
-mc.setBlock(position.x,position.y,position.z,46)
-mc.setBlock(position.x,position.y+1,position.z,70)
-player.setPos(position.x,position.y+2,position.z)
