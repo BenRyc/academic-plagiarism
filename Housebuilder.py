@@ -1,22 +1,17 @@
 from mcpi.minecraft import Minecraft
 from mcpi import block
+import random
+import Palettes
 
 def isAirBelow(x,y,z):
     if (Minecraft.create().getBlock(x, y-1, z) == block.AIR.id):
         return True
     else:
         return False
-    
-mc = Minecraft.create()
-player = mc.player
 
-origin = player.getPos()
+wall1Size = random.randint(2, 5)
+wall2Size = random.randint(2, 5)
 
-if isAirBelow(origin.x, origin.y-1, origin.z):
-    mc.postToChat("Yes")
+palette = Palettes.palletePicker()
 
-else:
-    mc.postToChat("No")
-
-
-
+print(palette)
