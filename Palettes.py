@@ -1,7 +1,7 @@
 from mcpi import block
 import random
 
-class housePalette():
+class palette():
     def __init__(self):
         self.Trim = None
         self.Floor = None
@@ -16,20 +16,9 @@ class housePalette():
         self.Ceiling = block.STONE_BRICK
         self.Roof = block.STAIRS_COBBLESTONE
         
-    def returnPalette(self):
-        palette = []
-        
-        palette.append(self.Trim)
-        palette.append(self.Floor)
-        palette.append(self.Walls)
-        palette.append(self.Ceiling)
-        palette.append(self.Roof)
-        
-        return palette
-        
         
 def palletePicker():
-    newHouse = housePalette()
+    housePalette = palette()
     
     #Edit below to how many palettes there are
     numOfPalettes = 1
@@ -39,8 +28,8 @@ def palletePicker():
     
     if choice == 0:
         newHouse.initOak()
-        return newHouse.returnPalette()
+        return housePalette
     
     else:
         newHouse.initOak()
-        return newHouse.returnPalette()
+        return housePalette
