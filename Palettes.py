@@ -1,6 +1,24 @@
 from mcpi import block
 import random
+'''
+This class generates the building materials used for each house
 
+***Materials Key***
+WALLS:
+(159,1) terracotta orange
+(159,3) terracotta light blue
+(159,4) terracotta yellow
+(159,5) terracotta green
+(159,6) terracotta pink
+(159,9) teracotta cyan
+(159,14) teracotta red
+(251,0) concrete white
+
+TRIM:
+(17,0) log oak
+(17,1) log spruce
+(162,1) log dark oak
+'''
 class housePalette():
     def __init__(self, trim=None, floor=None, walls=None, ceiling=None, roof=None):
         self.trim = trim
@@ -15,11 +33,11 @@ class housePalette():
         
         
     def pickPalette(self):
-        trimOptions = [block.WOOD]
-        floorOptions = [block.WOOD]
-        wallOptions = [block.WOOD]
-        ceilingOptions = [block.WOOD]
-        roofOptions = [block.WOOD]
+        trimOptions = [[17,0], [17,1], [162,1]]
+        floorOptions = [block.WOOD, block.STONE]
+        wallOptions = [[159, 1], [159,3], [159,4],[159,5],[159,6],[159,9],[159,14]]
+        ceilingOptions = [block.WOOD, block.STONE]
+        roofOptions = [block.WOOD, block.STONE]
 
         allOptions = [trimOptions, floorOptions, wallOptions, ceilingOptions, roofOptions]
         choicesArr = []
