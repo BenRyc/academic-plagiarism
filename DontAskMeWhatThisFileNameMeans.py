@@ -25,6 +25,38 @@ def genRoom(s, x, y, z, x2, z2):
 
 
 
+def roomRange(rooms, s, x, z):
+    for room in rooms:
+        if s == 0:
+            zd1 = z - room.z1
+            zd2 = z - room.z2
+
+
+
+        elif s == 1:
+            x1 = x
+            x2 = x1 + random.randint(4, 7)
+            z1 = z - random.randint(1, 4)
+            z2 = z + random.randint(1, 4)
+
+            room = genRoom(0, x1, y, z1, x2, z2)
+            rooms.append(room)
+        elif s == 2:
+            x1 = x
+            x2 = x1 + random.randint(4, 7)
+            z1 = z - random.randint(1, 4)
+            z2 = z + random.randint(1, 4)
+
+            room = genRoom(3, x1, y, z1, x2, z2)
+            rooms.append(room)
+        elif s == 3:
+            x1 = x
+            x2 = x1 + random.randint(4, 7)
+            z1 = z - random.randint(1, 4)
+            z2 = z + random.randint(1, 4)
+
+            room = genRoom(2, x1, y, z1, x2, z2)
+            rooms.append(room)
 
 
 
