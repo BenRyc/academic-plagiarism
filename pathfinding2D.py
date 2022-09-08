@@ -1,4 +1,5 @@
-
+from mcpi import minecraft
+from mcpi import block
 
 class Node():
     """A node class for A* Pathfinding"""
@@ -75,6 +76,12 @@ def astar(maze, start, end):
             new_node = Node(CurrentNode, NodePosition)
 
             # Append
+            #print(NodePosition[0])
+            #print(NodePosition[1])
+            print(NodePosition)
+            y = mc.getHeight(NodePosition)
+            mc.setBlock(NodePosition[0],64,NodePosition[1])
+
             children.append(new_node)
 
         # Loop through children
@@ -89,8 +96,8 @@ def astar(maze, start, end):
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
             child.p = (maze[child.position[0]][child.position[1]])
-            print(child.g)
-            print(child.h)
+            #print(child.g)
+            #print(child.h)
             child.f = child.g + child.h +child.p
 
             # Child is already in the open list
@@ -100,23 +107,28 @@ def astar(maze, start, end):
 
             # Add the child to the open list
             OpenList.append(child)
+            
 
-
+import random
+mc = minecraft.Minecraft.create()
 def main():
+    print("ay")
+    
+    print(mc.getBlock(12,92  ,4))
+    print("hey")
 
-    maze = [[0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 13, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 3, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 8, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0.5, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 3, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    
+    
+    maze = []   
+    for i in range(0,30):
+        nrow=[]
+        for j in range(0,30):
+            nrow.append(0)
+        maze.append(nrow)
+        print(nrow)
 
-    start = (0, 0)
-    end = (7, 6)
+    start = (5, 5)
+    end = (27, 6)
 
     Path = astar(maze, start, end)
     print(Path)
