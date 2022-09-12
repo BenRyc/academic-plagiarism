@@ -25,12 +25,65 @@ def genRoom(s, x, y, z, x2, z2):
 
 
 
+def roomRange(rooms, s, x, z):
+    maxx = 999999
+    maxz = 999999
+    minx = -999999
+    minz = -999999
+
+    for room in rooms:
+        if room != rooms[-1]:
+            if s == 0:
+                d1 = z - room.z1
+                d2 = z - room.z2
+
+                if d1 >= 0 and d2 >= 0:
+                    if d1 < d2 and d1 < maxz:
+                        maxz = d1
+                    elif d2 < d1 and d2 < maxz:
+                        maxz = d2
+                elif d1 < 0 and d2 < 0:
+                    if d1 > d2 and d1 > maxz:
+                        maxSz = d1
+                    elif d2 > d1 and d2 > maxz:
+                        maxz = d2
+                elif d1 >= 0 and d2 < 0:
+                    if d1 > maxz:
+                        maxz = d1
+                    elif d2 > d1 and d2 > maxz:
+                        maxz = d2
+
+            elif s == 1:
+                x1 = x
+                x2 = x1 + random.randint(4, 7)
+                z1 = z - random.randint(1, 4)
+                z2 = z + random.randint(1, 4)
+
+                room = genRoom(0, x1, y, z1, x2, z2)
+                rooms.append(room)
+            elif s == 2:
+                x1 = x
+                x2 = x1 + random.randint(4, 7)
+                z1 = z - random.randint(1, 4)
+                z2 = z + random.randint(1, 4)
+
+                room = genRoom(3, x1, y, z1, x2, z2)
+                rooms.append(room)
+            elif s == 3:
+                x1 = x
+                x2 = x1 + random.randint(4, 7)
+                z1 = z - random.randint(1, 4)
+                z2 = z + random.randint(1, 4)
+
+                room = genRoom(2, x1, y, z1, x2, z2)
+                rooms.append(room)
 
 
 
 def makeRoom(room):
 
-    mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, 34)
+    mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z2, 5)
+
 
     for i in room.doors:
         mc.setBlock(i[0], room.y, i[1], 50)
