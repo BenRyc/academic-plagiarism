@@ -11,3 +11,6 @@ class Room:
 
         self.doors = doors
         self.decor = decor
+
+    def __str__(self):
+        return f'x1:{self.x1} x2:{self.x2} xd:{self.x1-self.x2}  z1:{self.z1} z2:{self.z2} zd:{self.z1-self.z2}'
