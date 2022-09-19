@@ -1,7 +1,7 @@
 import mcpi
 import random
 
-class House():
+class newHouse():
     def __init__(self, x, z, length, width): 
 
         self.length = length
