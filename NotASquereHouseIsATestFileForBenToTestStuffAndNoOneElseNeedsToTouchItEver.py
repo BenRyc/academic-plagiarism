@@ -8,6 +8,42 @@ mc = minecraft.Minecraft.create()
 mc.postToChat("no squere")
 
 
+
+
+
+def houseInator(x1, y1, z1):
+    rooms = []
+    x2 = x1 + random.randint(15, 30)
+    z2 = z1 + random.randint(15, 30)
+
+
+
+
+def makeRoom(rooms, t):
+
+    for room in rooms:
+        if room.palette == True:
+
+            if t == 20:
+                t = 14
+
+            mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +3, room.z2, t)
+            mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +3, room.z2, t)
+            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z1, t)
+            mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, t)
+            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, t)
+            mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, t)
+
+            t += 1
+
+    for room in rooms:
+        print('num doors', len(room.doors))
+        for i in room.doors:
+            mc.setBlock(i[0], room.y +1, i[1], 0)
+            mc.setBlock(i[0], room.y +2, i[1], 0)
+            mc.setBlock(i[0], room.y +5, i[1], 50)
+
+
 def doorInRoom(door, room):
     print('doors')
     print(room)
@@ -36,59 +72,28 @@ def doorInRoom(door, room):
     return False
 
 
-def makeRoom(rooms, t):
-
-    for room in rooms:
-        if room.palette == True:
-
-            if t == 20:
-                t = 14
-
-            mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +3, room.z2, t)
-            mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +3, room.z2, t)
-            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z1, t)
-            mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, t)
-            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, t)
-            mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, t)
-
-            t += 1
-
-    for room in rooms:
-        print('num doors', len(room.doors))
-        for i in room.doors:
-            mc.setBlock(i[0], room.y +1, i[1], 0)
-            mc.setBlock(i[0], room.y +2, i[1], 0)
-            mc.setBlock(i[0], room.y +5, i[1], 50)
-
-
-def houseInator(x1, y1, z1):
-    rooms = []
-    x2 = x1 + random.randint(15, 30)
-    z2 = z1 + random.randint(15, 30)
-
-
 def doorAdd(room, dir):
     if room.z1 < room.z2:
         if dir == 'x1':
-            room.doors.append((room.x1, random.randint(room.z1+1, room.z2 - 1)))
+            room.doors.append((room.x1, random.randint(room.z1+2, room.z2 - 2)))
         elif dir == 'x2':
-            room.doors.append((room.x2, random.randint(room.z1+1, room.z2 - 1)))
+            room.doors.append((room.x2, random.randint(room.z1+2, room.z2 - 2)))
     else:
         if dir == 'x1':
-            room.doors.append((room.x1, random.randint(room.z2+1, room.z1 - 1)))
+            room.doors.append((room.x1, random.randint(room.z2+2, room.z1 - 2)))
         elif dir == 'x2':
-            room.doors.append((room.x2, random.randint(room.z2+1, room.z1 - 1)))
+            room.doors.append((room.x2, random.randint(room.z2+2, room.z1 - 2)))
 
     if room.x1 < room.x2:
         if dir == 'z1':
-            room.doors.append((random.randint(room.x1+1, room.x2 - 1), room.z1))
+            room.doors.append((random.randint(room.x1+2, room.x2 - 2), room.z1))
         elif dir == 'z2':
-            room.doors.append((random.randint(room.x1+1, room.x2 - 1), room.z2))
+            room.doors.append((random.randint(room.x1+2, room.x2 - 2), room.z2))
     else:
         if dir == 'z1':
-            room.doors.append((random.randint(room.x2+1, room.x1 - 1), room.z1))
+            room.doors.append((random.randint(room.x2+2, room.x1 - 2), room.z1))
         elif dir == 'z2':
-            room.doors.append((random.randint(room.x2+1, room.x1 - 1), room.z2))
+            room.doors.append((random.randint(room.x2+2, room.x1 - 2), room.z2))
 
 def doorCreator(rooms):
 
@@ -114,6 +119,35 @@ def doorCreator(rooms):
         for room1 in rooms:
             if doorInRoom(room.doors[-1], room1) and room1 != room:
                 room1.doors.append(room.doors[-1])
+
+
+
+def roomAdjinator(rooms):
+
+    # wall adding
+
+    for room in rooms:
+        for i in range(room.x1, room.z2):
+            room.walls.add((i, room.z1))
+            room.walls.add((i, room.z2))
+
+        for i in range(room.z1, room.z2):
+            room.walls.add((room.x1, i))
+            room.walls.add((room.x2, i))
+
+    #adj adding
+    for roomi in rooms:
+        for roomj in rooms:
+            if roomi != roomj and len(roomi.walls.intersection(roomj.walls)) > 0:
+                roomi.adj.add(roomj)
+                roomj.adj.add(roomi)
+
+    return rooms
+
+
+def roomCull(rooms):
+    pass
+
 
 
 def roomMitosis(room):
@@ -162,12 +196,6 @@ def roomMitosis(room):
             print(room1)
             print(room2)
 
-        # for door in room.doors:
-        #     if doorInRoom(door, room1):
-        #         room1.doors.append(door)
-        #     if doorInRoom(door, room2):
-        #         room2.doors.append(door)
-
         rooms = []
 
         for i in roomMitosis(room1):
@@ -190,8 +218,14 @@ t = 14
 
 rooms = roomMitosis(Room(int(x), int(z), int(x)+100, int(z)+100, int(y),None, [(x+3, z)], None))
 
-doorCreator(rooms)
-doorCreator(rooms)
+rooms = roomAdjinator(rooms)
+
+for room in rooms:
+    print(room.adj)
+# for room in rooms:
+#     print(room)
+# doorCreator(rooms)
+# doorCreator(rooms)
 # for i in range(len(rooms)):
 #     if len(rooms[i].doors) == 1 and random.randint(0,2) == 1:
 #         rooms[i].palette = False
