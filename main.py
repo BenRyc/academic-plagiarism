@@ -3,7 +3,6 @@ import random
 import House
 
 if __name__ == '__main__':
-
     #INITIALISE MC AND PLAYER COOR
     mc = minecraft.Minecraft.create()
     playerPos = mc.player.getPos()
@@ -12,53 +11,42 @@ if __name__ == '__main__':
 
     #HOUSE PLACEMENT
     houseList = []
-    numHouses = random.randint(5,10)
-
+    numHouses = random.randint(5,15)
     forbiddenCoor = set()
-    #starting position
-    currX = x 
-    currZ = z
-
+    placeRange = 13
+    randomColour = random.randint(0,16) #TODO DELETE
+    minDistance = 10
+    
     for i in range(numHouses):
         length = random.randint(13,25) #along x
         width = random.randint(13,25) #along z
 
         posFound = False
+        placeRange = placeRange + 5
         while posFound == False:
-            print('tried')
+
             #new house position
-            nextX = currX + random.randint(-30,30)
-            nextZ = currZ + random.randint(-30,30)
+            nextX = x + random.randint(-placeRange,placeRange)
+            nextZ = z + random.randint(-placeRange,placeRange)
 
             #generate coordinates occuppied by the house (including a rim of 2 blocks around the floorplan)
             houseCoor = set()
-            for ax in range(nextX-2, nextX+width+2):
-                for az in range(nextZ-2, nextZ+length+2):
+            for ax in range(nextX-(minDistance//2), nextX+width+(minDistance//2)):
+                for az in range(nextZ-(minDistance//2), nextZ+length+(minDistance//2)):
                     houseCoor.add((ax,az))
                     
-
-            #check if new position is valid
+            #run position is valid
             if len(houseCoor.intersection(forbiddenCoor)) == 0:
-
                 for val in houseCoor:
                     forbiddenCoor.add(val)
-                    mc.setBlock(val[0], y, val[1], 1)
-
-                currX = nextX
-                currZ = nextZ
-                mc.setBlock(currX, y, currZ, 159)
+                    mc.setBlock(nextX, y, nextZ, 1)
                 posFound = True
 
             #create new house
-        houseList.append(House.newHouse(currX, currZ, length, width))
-
-        #append new forbidden coordinates to the set
-        for coor in houseCoor:
-            forbiddenCoor.add(coor)
+        houseList.append(House.newHouse(nextX, nextZ, length, width))
 
     for house in houseList:
-        print(house)
-
-        
-
+        for ax in range(house.x, house.x+house.width):
+            for az in range(house.z, house.z+house.length):
+                mc.setBlock(ax, y, az, 159,randomColour)
 
