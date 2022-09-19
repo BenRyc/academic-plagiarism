@@ -8,17 +8,6 @@ mc = minecraft.Minecraft.create()
 mc.postToChat("no squere")
 
 
-
-
-
-def houseInator(x1, y1, z1):
-    rooms = []
-    x2 = x1 + random.randint(15, 30)
-    z2 = z1 + random.randint(15, 30)
-
-
-
-
 def makeRoom(rooms, t):
 
     for room in rooms:
@@ -47,7 +36,6 @@ def roomAdjinator(rooms):
 
     # wall adding
 
-
     for room in rooms:
         for i in range(room.x1, room.x2):
             room.walls.add((i, room.z1))
@@ -73,7 +61,7 @@ def roomAdjinator(rooms):
         room.walls.remove((room.x2, room.z2-1))
         room.walls.remove((room.x2-1, room.z2))
 
-        print('walls done')
+        # print('walls done')
         # print(len(room.walls))
         # print((room.x2 - room.x1) *2 + (room.z2 - room.z1) *2 -4)
         # print()
@@ -95,11 +83,13 @@ def roomCull(rooms):
     ajRooms = set()
     outRooms = []
 
+    # adds the first room to the inrooms
     inRooms.append(rooms[0])
     for room in inRooms[0].adj:
         ajRooms.add(room)
 
-    for i in range(int(len(rooms)/0.8)):
+    # picks a certan percentage of the rooms to keep and makes sure they are adjacent
+    for i in range(int(len(rooms)/1.4)):
         choice = random.choice(list(ajRooms))
 
         ajRooms.remove(choice)
@@ -115,19 +105,26 @@ def roomCull(rooms):
     return inRooms, outRooms
 
 def roomAdd(rooms):
+    # adds walls between every room
     for room in rooms:
         for adj in room.adj:
-            room.doors.append(list(room.walls.intersection(adj.walls))[0])
+            if adj in rooms:
+                room.doors.append(list(room.walls.intersection(adj.walls))[0])
 
+    rooms[0].doors.append((rooms[0].x1 +3, rooms[0].z1))
     return rooms
 
 def roomMitosis(room):
+    # Tests if the room is big enough to split
     if abs(room.x1 - room.x2) >= 13 or abs(room.z1 - room.z2) >= 13:
 
+        # decides if we split in the x or yaxis
         zorx = random.randint(0,2)
+        # the minimum size of the room in the x and z axis
         zof = 6
         xof = 6
 
+        # sets the split direction depending if the room will be to small
         if abs(room.x1 - room.x2) < 13:
             zorx = 0
             xof = 1
@@ -136,6 +133,7 @@ def roomMitosis(room):
             zof = 1
 
 
+        # Finds a mid point of the room that can be devided apon
         if room.x1 > room.x2:
             devixor = random.randint(int(room.x2 + xof), int(room.x1 -xof))
         else:
@@ -146,9 +144,8 @@ def roomMitosis(room):
         else:
             devizor = random.randint(int(room.z1 + zof), int(room.z2 -zof))
 
-
+        # makes 2 rooms devieded on the already created midpoint
         if zorx == 1:
-
             room1 = Room(room.x1, room.z1, devixor, room.z2, room.y, True, [], None)
             room2 = Room(devixor, room.z1, room.x2, room.z2, room.y, True, [], None)
 
@@ -158,6 +155,7 @@ def roomMitosis(room):
 
         rooms = []
 
+        # recursivly devides the rooms once again
         for i in roomMitosis(room1):
             rooms.append(i)
         for i in roomMitosis(room2):
