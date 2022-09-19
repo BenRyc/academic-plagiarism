@@ -24,21 +24,25 @@ except ImportError:
 """
 0 = North
 1 = East
-0 = South
-0 = West
+2 = South
+3 = West
 """
     
 outerReference = [[], [], [], []]
 avgOuterReference = [[], [], [], []]
+outerLayerBlocks = [[], [], [], []]
 
 layer1 = [[], [], [], []]
 avgLayer1 = [[], [], [], []]
+layer1Blocks = [[], [], [], []]
 
 layer2 = [[], [], [], []]
 avgLayer2 = [[], [], [], []]
+layer2Blocks = [[], [], [], []]
 
 foundation = []
 avgFoundation = 0.0
+foundationBlocks = []
 
 
     
@@ -263,20 +267,22 @@ def scanArea(startX, startZ, endX, endZ, sizeX, sizeZ):
 # Checking should also take place in case the array is too small to make it through both the top and bottom removal functions, as well as the right and left removal functions
 # If an array is found to be too small, the funciton simply returns what is has
 
-def stripLayer(scannedArea, north, east, south, west):
+def stripLayer(scannedArea, north, east, south, west, layerBlocks):
     
-    stripTopBottom(scannedArea, north, south)
+    stripTopBottom(scannedArea, north, south, layerBlocks)
     
     if scannedArea == []:
         return 0
     
-    stripRightLeft(scannedArea, east, west)
+    stripRightLeft(scannedArea, east, west, layerBlocks)
 
-def stripTopBottom(scannedArea, north, south):
+def stripTopBottom(scannedArea, north, south, layerBlocks):
     rowLen = len(scannedArea[0])
     
     for coords in range(rowLen):
-        north += [scannedArea[0].pop(0), ]
+        temp = scannedArea[0].pop(0)
+        layerBlocks[0] += [mc.getBlock(temp), ]
+        north += [temp, ]
         
     scannedArea.pop(0)
     
@@ -286,18 +292,24 @@ def stripTopBottom(scannedArea, north, south):
     colLen = len(scannedArea) - 1
     
     for coords in range(rowLen):
-        south += [scannedArea[colLen].pop(0), ]
+        temp = scannedArea[colLen].pop(0)
+        layerBlocks[2] += [mc.getBlock(temp), ]
+        south += [temp, ]
 
     scannedArea.pop(colLen)
     
-def stripRightLeft(scannedArea, east, west):
+def stripRightLeft(scannedArea, east, west, layerBlocks):
     for row in scannedArea:
-        east += [row.pop(0), ]
+        temp = row.pop(0)
+        layerBlocks[1] += [mc.getBlock(temp), ]
+        east += [temp, ]
         
     rowLen = len(scannedArea[0]) - 1
     
     for row in scannedArea:
-        west += [row.pop(rowLen), ]
+        temp = row.pop(rowLen)
+        layerBlocks[3] += [mc.getBlock(temp), ]
+        west += [temp, ]
     
 # Below functions should grab each height from a given direction in a given layer 
 # Then, get both the total number of values and the sum and average them out
@@ -347,6 +359,8 @@ def insertAvgFoundation(foundation, average):
         foundation[coord] = temp
         
     return average
+
+#Below function handle placing the new blocks for 
             
 
 mc = Minecraft.create()
@@ -367,9 +381,9 @@ endZ = anchor.z + sizeZ - 1
 
 scannedArea = scanArea(startX, startZ, endX, endZ, sizeX, sizeZ)
 
-stripLayer(scannedArea, outerReference[0], outerReference[1], outerReference[2], outerReference[3])
-stripLayer(scannedArea, layer1[0], layer1[1], layer1[2], layer1[3])
-stripLayer(scannedArea, layer2[0], layer2[1], layer2[2], layer2[3])
+stripLayer(scannedArea, outerReference[0], outerReference[1], outerReference[2], outerReference[3], outerLayerBlocks)
+stripLayer(scannedArea, layer1[0], layer1[1], layer1[2], layer1[3], layer1Blocks)
+stripLayer(scannedArea, layer2[0], layer2[1], layer2[2], layer2[3], layer2Blocks)
 
 rowLen = len(scannedArea[0])
 colLen = len(scannedArea)
@@ -377,7 +391,9 @@ colLen = len(scannedArea)
 for row in range(colLen):
     
     for coord in range(rowLen):
-        foundation += [scannedArea[0].pop(0), ]
+        temp = scannedArea[0].pop(0)
+        foundationBlocks += [mc.getBlock(temp), ]
+        foundation += [temp, ]
         
     scannedArea.pop(0)
     
@@ -386,46 +402,11 @@ averageHeight(layer1, avgLayer1)
 averageHeight(layer2, avgLayer2)
 avgFoundation = averageHeightFoundation(foundation)
 
-        
-print("Outer Reference")
-print(avgOuterReference[0])
-print(outerReference[0])
+print(outerLayerBlocks)
 print()
-print(avgOuterReference[1])
-print(outerReference[1])
+print(layer1Blocks)
 print()
-print(avgOuterReference[2])
-print(outerReference[2])
+print(layer2Blocks)
 print()
-print(avgOuterReference[3])
-print(outerReference[3])
-print()
-print("Layer 1")
-print(avgLayer1[0])
-print(layer1[0])
-print()
-print(avgLayer1[1])
-print(layer1[1])
-print()
-print(avgLayer1[2])
-print(layer1[2])
-print()
-print(avgLayer1[3])
-print(layer1[3])
-print()
-print("Layer 2")
-print(avgLayer2[0])
-print(layer2[0])
-print()
-print(avgLayer2[1])
-print(layer2[1])
-print()
-print(avgLayer2[2])
-print(layer2[2])
-print()
-print(avgLayer2[3])
-print(layer2[3])
-print()
-print("Foundation")
-print(avgFoundation)
-print(foundation)
+print(foundationBlocks)
+
