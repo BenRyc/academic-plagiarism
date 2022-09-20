@@ -185,9 +185,13 @@ class House:
             mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x2, room.y, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
 
+        for room in self.inRooms:
             for door in room.doors:
+                mc.setBlock(door[0], room.y +2, door[1], door[0], room.y +1, door[1], 0)
 
-                mc.setBlocks(door[0], room.y+1, door[1], door[0], room.y +2, door[1], 0)
+                mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))
+                mc.setBlock(door[0], room.y+1, door[1], block.DOOR_WOOD.withData(0))
+
 
 
 
@@ -203,3 +207,6 @@ if __name__ == '__main__':
 
     house.generateRooms()
     house.build(mc)
+
+    # for i in range(12):
+    #     mc.setBlock(x, y, z+i, block.DOOR_WOOD.withData(i))
