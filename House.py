@@ -4,6 +4,15 @@ import random
 import Palettes
 from Room import Room
 
+def decorBedroom(self, coor1, coor2, doorsCoor):
+    pass
+def decorkitchen(self, coor1, coor2, doorsCoor):
+    pass
+def decorDining(self, coor1, coor2, doorsCoor):
+    pass
+def decorLiving(self, coor1, coor2, doorsCoor):
+    pass
+
 
 def roomAdjinator(rooms):
 
@@ -178,7 +187,7 @@ class House:
             mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, self.palette.walls)
 
             mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, self.palette.floor)
-            mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
+            #mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
 
             mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x1, room.y, room.z2, room.x1, room.y +4, room.z2, self.palette.trim)
@@ -191,6 +200,8 @@ class House:
 
                 mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))
                 mc.setBlock(door[0], room.y+1, door[1], block.DOOR_WOOD.withData(0))
+
+    
 
 
 
