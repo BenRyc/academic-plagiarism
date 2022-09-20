@@ -146,12 +146,12 @@ def roomMitosis(room):
 
         # makes 2 rooms devieded on the already created midpoint
         if zorx == 1:
-            room1 = Room(room.x1, room.z1, devixor, room.z2, room.y, True, [], None)
-            room2 = Room(devixor, room.z1, room.x2, room.z2, room.y, True, [], None)
+            room1 = Room(room.x1, room.z1, devixor, room.z2, room.y, [], None)
+            room2 = Room(devixor, room.z1, room.x2, room.z2, room.y, [], None)
 
         else:
-            room1 = Room(room.x1, room.z1, room.x2, devizor, room.y, True, [], None)
-            room2 = Room(room.x1, devizor, room.x2, room.z2, room.y, True, [], None)
+            room1 = Room(room.x1, room.z1, room.x2, devizor, room.y, [], None)
+            room2 = Room(room.x1, devizor, room.x2, room.z2, room.y, [], None)
 
         rooms = []
 
@@ -181,6 +181,9 @@ rooms = roomAdjinator(rooms)
 inRooms, outRooms = roomCull(rooms)
 
 inRooms = roomAdd(inRooms)
+
+
+
 # for room in rooms:
 #     print(room)
 # doorCreator(rooms)
