@@ -21,32 +21,89 @@ try:
 except ImportError:
     import Queue as queue
     
-"""
-0 = North
-1 = East
-2 = South
-3 = West
-"""
+class Layer():
+    def __init__(self):
+        self.north = []
+        self.east = []
+        self.south = []
+        self.west = []
+        
+        self.northAvg = 0.0
+        self.eastAvg = 0.0
+        self.southAvg = 0.0
+        self.westAvg = 0.0
+        
+        self.northBlocks = []
+        self.eastBlocks = []
+        self.southBlocks = []
+        self.westBlocks = []
+        
+    def addCoord(self, direction, coord):
+        if direction == 0:
+            self.north += [coord, ]
+            
+        elif direction == 1:
+            self.east += [coord, ]
+            
+        elif direction == 2:
+            self.south += [coord, ]
+            
+        elif direction == 3:
+            self.west += [coord, ]
+            
+    def addAvg(self, direction, avg):
+        if direction == 0:
+            self.northAvg = round(avg, 0)
+            
+        elif direction == 1:
+            self.eastAvg = round(avg, 0)
+            
+        elif direction == 2:
+            self.southAvg = round(avg, 0)
+            
+        elif direction == 3:
+            self.westAvg = round(avg, 0)
+            
+    def addBlock(self, direction, block):
+        if direction == 0:
+            self.northBlocks += [block, ]
+            
+        elif direction == 1:
+            self.eastBlocks += [block, ]
+            
+        elif direction == 2:
+            self.southBlocks += [block, ]
+            
+        elif direction == 3:
+            self.westBlocks += [block, ]
+            
+class Foundation():
+    def __init__(self):
+        self.coords = []
+        
+        self.averageHeights = 0.0
+        
+        self.blocks = []
+        
+    def addCoord(self, coord):
+        self.north += [coord, ]
+            
+    def addAvg(self, direction, avg):
+        self.averageHeights = round(avg, 0)
+            
+    def addBlock(self, direction, block):
+        self.blocks += [block, ]
+        
+layers = []
+
+numLayers = 3
+
+for i in range(numLayers):
+    layers += [Layer(), ]
     
-outerReference = [[], [], [], []]
-avgOuterReference = [[], [], [], []]
-outerLayerBlocks = [[], [], [], []]
-
-layer1 = [[], [], [], []]
-avgLayer1 = [[], [], [], []]
-layer1Blocks = [[], [], [], []]
-
-layer2 = [[], [], [], []]
-avgLayer2 = [[], [], [], []]
-layer2Blocks = [[], [], [], []]
-
-foundation = []
-avgFoundation = 0.0
-foundationBlocks = []
-
-
+layers += [Foundation(), ]
     
-
+    
 def query_blocks(connection, requests, fmt, parse_fn, thread_count = 0):
     """Perform a batch of Minecraft server queries.
     The following Minecraft Pi edition socket query functions
@@ -224,6 +281,10 @@ def alt_picraft_getheight_vrange(world, vrange):
                          thread_count = 0)]
     
     
+# Below functions should scan the nearby area of the player and clean up the results into an array with rows being properly represented
+
+# EG. If scanArea returns [Vector1, Vector2, Vector3, Vector4], cleanUpScan will return [[Vector1, Vector2],[Vector3, Vector4]]
+
 def cleanUpScan(scannedArea, sizeX, sizeZ):
     filtered = []
     index = 0
@@ -267,22 +328,22 @@ def scanArea(startX, startZ, endX, endZ, sizeX, sizeZ):
 # Checking should also take place in case the array is too small to make it through both the top and bottom removal functions, as well as the right and left removal functions
 # If an array is found to be too small, the funciton simply returns what is has
 
-def stripLayer(scannedArea, north, east, south, west, layerBlocks):
+def stripLayer(scannedArea, layer):
     
-    stripTopBottom(scannedArea, north, south, layerBlocks)
+    stripTopBottom(scannedArea, layer)
     
     if scannedArea == []:
         return 0
     
-    stripRightLeft(scannedArea, east, west, layerBlocks)
+    stripRightLeft(scannedArea, layer)
 
-def stripTopBottom(scannedArea, north, south, layerBlocks):
+def stripTopBottom(scannedArea, layer):
     rowLen = len(scannedArea[0])
     
     for coords in range(rowLen):
         temp = scannedArea[0].pop(0)
-        layerBlocks[0] += [mc.getBlock(temp), ]
-        north += [temp, ]
+        layer.addBlock(0, mc.getBlockWithData(temp))
+        layer.addCoord(0, temp)
         
     scannedArea.pop(0)
     
@@ -293,23 +354,23 @@ def stripTopBottom(scannedArea, north, south, layerBlocks):
     
     for coords in range(rowLen):
         temp = scannedArea[colLen].pop(0)
-        layerBlocks[2] += [mc.getBlock(temp), ]
-        south += [temp, ]
+        layer.addBlock(2, mc.getBlockWithData(temp))
+        layer.addCoord(2, temp)
 
     scannedArea.pop(colLen)
     
-def stripRightLeft(scannedArea, east, west, layerBlocks):
+def stripRightLeft(scannedArea, layer):
     for row in scannedArea:
         temp = row.pop(0)
-        layerBlocks[1] += [mc.getBlock(temp), ]
-        east += [temp, ]
+        layer.addBlock(1, mc.getBlockWithData(temp))
+        layer.addCoord(1, temp)
         
     rowLen = len(scannedArea[0]) - 1
     
     for row in scannedArea:
         temp = row.pop(rowLen)
-        layerBlocks[3] += [mc.getBlock(temp), ]
-        west += [temp, ]
+        layer.addBlock(3, mc.getBlockWithData(temp))
+        layer.addCoord(3, temp)
     
 # Below functions should grab each height from a given direction in a given layer 
 # Then, get both the total number of values and the sum and average them out
@@ -360,28 +421,114 @@ def insertAvgFoundation(foundation, average):
         
     return average
 
-#Below function handle placing the new blocks for 
+# Below function handle placing the new blocks for teraforming. Using layerreferences and layerBlockReferences
+# Should scan through each coord in each layer reference, placing that spesific block in the spesific location
+# Should also scan for if the block above the block is solid, and if so replace it with air
+
+def isAirAbove(coord):
+    if mc.getBlock(coord.x, coord.y + 1, coord .z) == 0:
+        return True
+    else:
+        return False
+    
+def fillAirAbove(coord):
+    if isAirAbove(coord) == False:
+        mc.setBlock(coord.x, coord.y + 1, coord.z, 0)
+        fillAirAbove(Vector(coord.x, coord.y + 1, coord.z))
+        
+    else:
+        return 0
+    
+def isAirBelow(coord):
+    if mc.getBlock(coord.x, coord.y - 1, coord.z) == 0:
+        return True
+    else:
+        return False
+    
+def fillAirBelow(coord, blockId, data):
+    if isAirBelow(coord):
+        mc.setBlock(coord.x, coord.y - 1, coord.z, blockId, data)
+        fillAirBelow(Vector(coord.x, coord.y - 1, coord.z), blockId, data)
+        
+    else:
+        return 0
+
+def placeBlock(coord, blockId, data, fillBelow):
+    x = coord.x
+    y = coord.y
+    z = coord.z
+    
+    if fillBelow:
+        mc.setBlock(x, y, z, blockId, data)
+        fillAirAbove(coord)
+        fillAirBelow(coord, blockId, data)
+        
+    else:
+        if isAirBelow(coord) == False:
+            mc.setBlock(x, y, z, blockId, data)
+            fillAirAbove(coord) 
             
+    
+def placeFoundation(layerReference, layerBlockReference):
+    
+    try:
+        temp = layerReference[0][0][0]
+        layered = True
+    except:
+        layered = False
+    
+    if layered:
+        for i in range(len(layerBlockReference)):
+            for x in range(len(layerReference[i])):
+                coord = layerReference[i][x]
+                block = layerBlockReference[i][x]
+                placeBlock(coord, block.id, block.data, False)
+                
+    elif layered == False:
+        for x in range(len(layerReference)):
+                coord = layerReference[x]
+                block = layerBlockReference[x]
+                placeBlock(coord, block.id, block.data, True)
 
 mc = Minecraft.create()
 
+print("World created!")
+
 anchor = mc.player.getTilePos()
+
+print("Anchor stored")
 
 sizehouseX = 5
 sizehouseZ = 5
 
+print("Size of the house's X is:" + str(sizehouseX))
+print("Size of the house's Z is:" + str(sizehouseZ))
+
 sizeX = sizehouseX + 6
 sizeZ = sizehouseZ + 6
+
+print("Size of the overall X is:" + str(sizeX))
+print("Size of the overall Z is:" + str(sizeZ))
 
 startX = anchor.x
 endX = anchor.x + sizeX - 1
 
+print("Start X is: " + str(startX) + "\nEnd X is: " + str(endX))
+
 startZ = anchor.z
 endZ = anchor.z + sizeZ - 1
 
+print("Start Z is: " + str(startZ) + "\nEnd Z is: " + str(endZ))
+
 scannedArea = scanArea(startX, startZ, endX, endZ, sizeX, sizeZ)
 
-stripLayer(scannedArea, outerReference[0], outerReference[1], outerReference[2], outerReference[3], outerLayerBlocks)
+print("Area scanned!")
+
+for layerIndex in range(len(layers)):
+    if layer in layers:
+        stripLayer(scannedArea, layer)
+
+
 stripLayer(scannedArea, layer1[0], layer1[1], layer1[2], layer1[3], layer1Blocks)
 stripLayer(scannedArea, layer2[0], layer2[1], layer2[2], layer2[3], layer2Blocks)
 
@@ -392,21 +539,28 @@ for row in range(colLen):
     
     for coord in range(rowLen):
         temp = scannedArea[0].pop(0)
-        foundationBlocks += [mc.getBlock(temp), ]
+        foundationBlocks += [block.BEDROCK, ]
+        #foundationBlocks += [mc.getBlockWithData(temp), ]
         foundation += [temp, ]
         
     scannedArea.pop(0)
+    
+print("Layers stripped!")
     
 averageHeight(outerReference, avgOuterReference)
 averageHeight(layer1, avgLayer1)
 averageHeight(layer2, avgLayer2)
 avgFoundation = averageHeightFoundation(foundation)
 
-print(outerLayerBlocks)
-print()
-print(layer1Blocks)
-print()
-print(layer2Blocks)
-print()
-print(foundationBlocks)
+print("Average heights found!")
+
+placeFoundation(outerReference, outerReferenceBlocks)
+placeFoundation(layer1, layer1Blocks)
+placeFoundation(layer2, layer2Blocks)
+placeFoundation(foundation, foundationBlocks)
+
+print("Foundation placed, all done!")
+
+
+
 
