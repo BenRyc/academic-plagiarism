@@ -39,17 +39,10 @@ class housePalette():
         ceilingOptions = [block.WOOD, block.STONE]
         roofOptions = [block.WOOD, block.STONE]
 
-        allOptions = [trimOptions, floorOptions, wallOptions, ceilingOptions, roofOptions]
-        choicesArr = []
-
-        #choose palette 
-        for arr in allOptions:
-            choicesArr.append(random.choice(arr))
-
-        #change house attributes
-        self.trim = choicesArr[0]
-        self.floor = choicesArr[1]
-        self.walls = choicesArr[2]
-        self.ceiling = choicesArr[3]
-        self.roof = choicesArr[4]
+        #randomised palette
+        self.trim = random.choice(trimOptions)
+        self.floor = random.choice(floorOptions)
+        self.walls = random.choice(wallOptions)
+        self.ceiling = random.choice(ceilingOptions)
+        self.roof = random.choice(roofOptions)
 
