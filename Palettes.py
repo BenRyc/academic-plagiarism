@@ -44,8 +44,7 @@ class housePalette():
 
         #choose palette 
         for arr in allOptions:
-            choiceInt = random.randint(0, len(arr)-1)
-            choicesArr.append(arr[choiceInt])
+            choicesArr.append(random.choice(arr))
 
         #change house attributes
         self.trim = choicesArr[0]

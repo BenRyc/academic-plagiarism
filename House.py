@@ -1,5 +1,6 @@
 import mcpi
 import random
+import Palettes
 
 class newHouse():
     def __init__(self, x, z, length, width): 
@@ -7,7 +8,16 @@ class newHouse():
         self.z = z
         self.length = length
         self.width = width
-        self.dimensions = {"x1":x, "z1":z, "x2":x+length, "z2":z+width}
+
+        self.palette = Palettes.housePalette()
+        self.palette.pickPalette()
+        
+        #roomList = ?
+        
+
+    #generate floorplan
+    
+    #build house
         
         
 
