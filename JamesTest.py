@@ -7,7 +7,7 @@ def getTopHeight(X, Z):
     
     while mc.getBlock(X, Y, Z) == 0:
         Y -= 1
-        
+        print(Y)
     return Y
 
 mc = Minecraft.create()
