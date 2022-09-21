@@ -167,6 +167,19 @@ class House:
 
         self.inRooms = roomAdd(self.inRooms)
 
+        if random.randint(0,2) == 1:
+            rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+4, [], None))
+
+            rooms = roomAdjinator(rooms)
+
+            inRooms, outRooms = roomCull(rooms)
+
+            inRooms = roomAdd(inRooms)
+
+            for i in inRooms:
+                self.inRooms.append(i)
+
+
 
     def build(self, mc):
 
