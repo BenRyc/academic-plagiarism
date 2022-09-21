@@ -1,32 +1,26 @@
 from mcpi.minecraft import Minecraft
 from mcpi import block
 
-def getTopHeight(X, Z):
-    
-    Y = 255
-    
-    while mc.getBlock(X, Y, Z) == 0:
-        Y -= 1
-        print(Y)
-    return Y
-
 mc = Minecraft.create()
 
 origin = mc.player.getPos()
 
-rangeX = 5
-rangeZ = 5
+rangeX = 100
+rangeZ = 100
 
 scan = []
+blockNum = 0
 
-for Zcoord in range(rangeZ * 2):
+for Zcoord in range(rangeZ):
     scanZ = origin.z + ((rangeZ * (-1)) + Zcoord)
     row = []
     
-    for Xcoord in range(rangeX * 2):
+    for Xcoord in range(rangeX):
         scanX = origin.x + ((rangeX * (-1)) + Xcoord)
-        row.append((scanX, getTopHeight(scanX, scanZ), scanZ))
-        mc.setBlock(scanX, getTopHeight(scanX, scanZ), scanZ, 1)
+        Y = mc.getHeight(scanX, scanZ)
+        row.append((int(scanX), int(Y), int(scanZ)))
+        blockNum += 1
+        print(str(blockNum) + "/" + str(rangeX*rangeZ))
         
     scan.append(row)
     

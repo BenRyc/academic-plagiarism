@@ -335,21 +335,25 @@ def astar(maze, start, end):
 
             # Add the child to the open list
             OpenList.append(child)
+            
 
 import random
 mc = minecraft.Minecraft.create()
 def main():
+    print("ay")
+    
+    print(mc.getBlock(12,92  ,4))
+    print("hey")
 
-    maze = [[0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 13, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 3, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 8, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0.5, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 3, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    
+    
+    maze = []   
+    for i in range(0,30):
+        nrow=[]
+        for j in range(0,30):
+            nrow.append(0)
+        maze.append(nrow)
+        print(nrow)
 
     global translated
     def getVals(listval1, listval2, translatedval):
