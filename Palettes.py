@@ -18,6 +18,8 @@ TRIM:
 (17,0) log oak
 (17,1) log spruce
 (162,1) log dark oak
+
+(171.1.4) carpet red
 '''
 class housePalette():
     def __init__(self, trim=None, floor=None, walls=None, ceiling=None, roof=None):
@@ -27,8 +29,7 @@ class housePalette():
         self.ceiling = ceiling
         self.roof = roof
 
-    def returnPalette(self):
-        
+    def __str__(self):
         return f'trim:{self.trim}, floor:{self.floor}, walls:{self.walls}, ceiling:{self.ceiling}, roof:{self.roof}'
         
         

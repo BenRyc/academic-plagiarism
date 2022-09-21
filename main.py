@@ -1,7 +1,25 @@
+
+
+# from __future__ import absolute_import, division, print_function
+# from __future__ import unicode_literals
 from mcpi import minecraft
+from mcpi import block
 import random
 import House
-import Teraforming
+# import Teraforming
+    
+# import picraft
+# from picraft import Vector, X, Y, Z
+
+# import collections
+# import select
+# import socket
+# import threading
+# import queue
+
+
+
+
 
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
@@ -18,7 +36,7 @@ if __name__ == '__main__':
     numHouses = random.randint(5,15)
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
-    minDistance = 10
+    minDistance = 4
     
     for i in range(numHouses):
         #randomise size
@@ -45,25 +63,28 @@ if __name__ == '__main__':
                 posFound = True
 
         #add new house object
-        houseList.append(House.newHouse(chosenX, None, chosenZ, length, width))
+        houseList.append(House.House(chosenX, y, chosenZ, length, width)) #change y to None
         scanDiameter = scanDiameter + 5
     
     #TODO DELETE
     #illustrates the house placement, for testing
-    '''
-    for house in houseList:
-        for ax in range(house.x, house.x+house.width):
-            for az in range(house.z, house.z+house.length):
-                mc.setBlock(ax, y, az, 159,random.randint(0,16))
-    '''
+    # 
+    # randomColour = random.randint(0,16)
+    # for house in houseList:
+    #     for ax in range(house.x, house.x+house.width):
+    #         for az in range(house.z, house.z+house.length):
+    #             mc.setBlock(ax, y, az, 159, randomColour)
+
     ########################################################################
     #                           TERRAFORMING                               #
     ########################################################################
 
-    for house in houseList:
-        house.y = Teraforming.terraform(house.x+house.length, house,z+house.width, length, width)
-        
+    # for house in houseList:
+    #     house.y = Teraforming.terraform(house.x+house.length, house,z+house.width, length, width)
+
     ########################################################################
     #                           GENERATE HOUSE                             #
     ########################################################################
-
+    for house in houseList:
+        house.generateRooms()
+        house.build(mc)

@@ -18,7 +18,7 @@ class Decoration:
         if self.width < 3 or self.height < 3:
             raise ValueError('Room is too small. Must be minimum 3x3')
 
-    def roomDecoratorInator(self): #coor param are [x,y,z]
+    def roomDecorator(self): #coor param are [x,y,z]
         #find what wall has a door
         doorX = self.doorsCoor[0]
         doorZ = self.doorsCoor[2]
@@ -30,8 +30,8 @@ class Decoration:
             doorDir = 'N'
         #facing south
         elif doorZ == self.coor2[2]:
-            print('S')
-            doorDir = 'S'
+            print('+z')
+            doorDir = '+z'
 
         elif doorX == self.coor2[0]:
             print('E')
@@ -62,6 +62,7 @@ class Decoration:
                 for i in range(0,self.height):
                     mc.setBlock(self.coor1[0],self.coor1[1]+i,self.coor2[2], 47,0)
                 mc.setBlock(self.coor2[0],self.coor1[1],self.coor2[2],58)
+
                 
 
             elif doorDir == 'E':
