@@ -298,15 +298,18 @@ def astar(maze, start, end):
             # Create the f, g, and h values
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
-            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))*5
-            #print(CurrentNode.p)
+            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))*30
+            print(maze[child.position[0]][child.position[1]])
+            print(child.position[0]-translated[0])
+            print(child.position[1]-translated[1])
+            #print(CurrentNode.p
             print(CurrentNode.p)
 
             x = child.position[0]-translated[0]
             z = child.position[1]-translated[1]
             y=mc.getHeight(x,z)
             #print (mc.getHeight)
-            mc.setBlock(x,y,z,35)
+            mc.setBlock(x,y,z,20)
             #print(child.position)
 
             #print(translated[0])
@@ -335,25 +338,21 @@ def astar(maze, start, end):
 
             # Add the child to the open list
             OpenList.append(child)
-            
 
 import random
 mc = minecraft.Minecraft.create()
 def main():
-    print("ay")
-    
-    print(mc.getBlock(12,92  ,4))
-    print("hey")
 
-    
-    
-    maze = []   
-    for i in range(0,30):
-        nrow=[]
-        for j in range(0,30):
-            nrow.append(0)
-        maze.append(nrow)
-        print(nrow)
+    maze = [[0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 13, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 3, -1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 8, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0.5, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 3, 0, 0, -1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
     global translated
     def getVals(listval1, listval2, translatedval):
@@ -396,10 +395,10 @@ def main():
             #print(i)
         #for i in h:
             #print(i)
-    start = [4015,4060]
-    end = [4060,4020]
+    start = [6015,6060]
+    end = [6060,6020]
     
-    translated = [4015,4060]
+    translated = [6015,6060]
     #print(start, end)
     if start[0]<5:
         tempStore = start[0]
@@ -467,6 +466,7 @@ def main():
             hval = j+100*i
             nrow.append(int(h[hval].y))
         maze.append(nrow)
+        print(nrow)
     #print(maze)
     #print(maze)
         #print(nrow)
@@ -485,6 +485,10 @@ def main():
         #print(translated[1])
         #print(i[0])
         #print(i[1])
+        print(i[0])
+        print(i[1])
+        print(-translated[0])
+        print(-translated[1])
         x = i[0] -translated[0]
         #print(x)
         z = i[1] -translated[1]
@@ -493,7 +497,15 @@ def main():
         #print(z)
         y = mc.getHeight(x,z)
         #print(x,z)
-        mc.setBlock(x,y,z,14)
+        mc.setBlock(x,y,z,8)
+        if (x+1,z) not in Path:
+            mc.setBlock(x+1,y,z,4)
+        if (x-1,z) not in Path:
+            mc.setBlock(x-1,y,z,4)
+        if (x,z+1) not in Path:
+            mc.setBlock(x,y,z+1,4)
+        if (x,z-1) not in Path:
+            mc.setBlock(x,y,z,4)
         #print(maze)
         
 
