@@ -28,7 +28,12 @@ if __name__ == '__main__':
 
         #tries a random position until it doesn't overlap with previous houses
         posFound = False
+        
+        #TODO DELETE VARIABLE
+        loopIter = 0
+        
         while posFound == False:
+            loopIter += 1
             #new house position
             chosenX = x + random.randint(-scanDiameter,scanDiameter)
             chosenZ = z + random.randint(-scanDiameter,scanDiameter)
@@ -37,13 +42,10 @@ if __name__ == '__main__':
             houseCoor = set()
             for ax in range(chosenX-(minDistance//2), chosenX+width+(minDistance//2)):
                 
-                #TODO DELETE PRINT
-                print(f'Initialising house {i}/{numHouses}, ax = {ax}')
-                
                 for az in range(chosenZ-(minDistance//2), chosenZ+length+(minDistance//2)):
                     
                     #TODO DELETE PRINT
-                    print(f'Initialising house {i}/{numHouses}, az = {az}')
+                    print(f'Initialising house {i}/{numHouses}, iteration {loopIter}, ({ax}, {az})')
                     
                     houseCoor.add((ax,az))
                     
