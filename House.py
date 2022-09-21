@@ -156,6 +156,7 @@ class House:
         self.x = x
         self.z = z
         self.y = y
+        self.foundation = []
         self.length = length
         self.width = width
 

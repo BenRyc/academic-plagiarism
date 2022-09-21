@@ -78,6 +78,7 @@ if __name__ == '__main__':
     for house in houseList:
         house.foundation = Terraforming.terraform(house.x+house.length, house.z+house.width, length, width)
         house.y = house.foundation[0][1]
+        
     ########################################################################
     #                           GENERATE HOUSE                             #
     ########################################################################
