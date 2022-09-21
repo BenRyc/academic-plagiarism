@@ -41,12 +41,12 @@ if __name__ == '__main__':
             for ax in range(chosenX-(minDistance//2), chosenX+width+(minDistance//2)):
                 
                 #TODO DELETE
-                print(f'ax = {ax}')
+                print(f'Initialising house {i}/{numHouses}, ax = {ax}')
                 
                 for az in range(chosenZ-(minDistance//2), chosenZ+length+(minDistance//2)):
                     
                     #TODO DELETE
-                    print(f'az = {az}')
+                    print(f'Initialising house {i}/{numHouses}, az = {az}')
                     
                     houseCoor.add((ax,az))
                     
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     print("Generating terrain")
     
     for house in houseList:
-        house.y = Teraforming.terraform(house.x+house.length, house,z+house.width, length, width)
+        house.y = Terraforming.terraform(house.x+house.length, house,z+house.width, length, width)
         
     ########################################################################
     #                           GENERATE HOUSE                             #
