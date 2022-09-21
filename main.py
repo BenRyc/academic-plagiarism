@@ -21,6 +21,10 @@ if __name__ == '__main__':
     minDistance = 10
     
     for i in range(numHouses):
+        
+        #TODO delete print statement below, just for debugging to check progress
+        print(f'Initialising house {i}/{numHouses}')
+        
         #randomise size
         length = random.randint(13,25) #along x
         width = random.randint(13,25) #along z
@@ -45,7 +49,7 @@ if __name__ == '__main__':
                 posFound = True
 
         #add new house object
-        houseList.append(House.newHouse(chosenX, None, chosenZ, length, width))
+        houseList.append(House.House(chosenX, None, chosenZ, length, width))
         scanDiameter = scanDiameter + 5
     
     #TODO DELETE
@@ -60,6 +64,9 @@ if __name__ == '__main__':
     #                           TERRAFORMING                               #
     ########################################################################
 
+    #TODO Delete below print statement, just for debugging to check progress
+    print("Generating terrain")
+    
     for house in houseList:
         house.y = Teraforming.terraform(house.x+house.length, house,z+house.width, length, width)
         
