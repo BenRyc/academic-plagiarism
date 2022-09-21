@@ -4,13 +4,75 @@ import random
 import Palettes
 from Room import Room
 
-def decorBedroom(self, coor1, coor2, doorsCoor):
+def decorBedroom(room, coor1, coor2, dirWithDoor):
+    # #find what wall has a door
+    #     doorX = self.doorsCoor[0]
+    #     doorZ = self.doorsCoor[2]
+    #     #mc.postToChat(f'{doorX},{doorZ}')
+
+    #     #facing east
+    #     if doorZ == self.coor1[2]:
+    #         print('-z')
+    #         doorDir = '-z'
+    #     #facing south
+    #     elif doorZ == self.coor2[2]:
+    #         print('+z')
+    #         doorDir = '+z'
+
+    #     elif doorX == self.coor2[0]:
+    #         print('+x')
+    #         doorDir = '+x'
+    #     #facing west
+    #     elif doorX == self.coor1[0]:
+    #         print('-x')
+    #         doorDir = '-x'
+
+    #     else:
+    #         raise ValueError('Door is not in a valid position.')
+
+
+    #bedrooms can only have one door
+    if len(dirWithDoor) > 1:
+        print('bedrooms must have only one wall with doors')
+        return 
+
+    if '-z' in dirWithDoor: 
+        #bookshelf
+        for i in range(0,room.height):
+            mc.setBlock(room.coor2[0],room.coor1[1]+i,room.coor1[2], 47,0)
+        #crafting table
+        mc.setBlock(room.coor1[0],room.coor1[1],room.coor1[2],58)
+        #bed and table
+        mc.setBlock(room.coor2[0],room.coor1[1],room.coor2[2]-1,26)
+        mc.setBlock(room.coor2[0]-1,room.coor1[1],room.coor2[2],53,6)
+        
+    elif '+z' in dirWithDoor:
+        for i in range(0,room.height):
+            mc.setBlock(room.coor1[0],room.coor1[1]+i,room.coor2[2], 47,0)
+        mc.setBlock(room.coor2[0],room.coor1[1],room.coor2[2],58)
+
+        
+
+    elif '+x' in dirWithDoor:
+        for i in range(0,room.height):
+            mc.setBlock(room.coor2[0],room.coor1[1]+i,room.coor2[2], 47,0)
+        mc.setBlock(room.coor2[0],room.coor1[1],room.coor1[2],58)
+
+    elif '-x' in dirWithDoor:
+        for i in range(0,room.height):
+            mc.setBlock(room.coor1[0],room.coor1[1]+i,room.coor1[2], 47,0)
+        mc.setBlock(room.coor1[0],room.coor1[1],room.coor2[2],58)
+        mc.setBlock(room.coor2[0]-1,room.coor1[1],room.coor1[2],26)
+        mc.setBlock(room.coor2[0],room.coor1[1],room.coor1[2]+1,53,4)
+    
+    #place bed and bedside table
+    #place desk
+
+def decorkitchen(self, coor1, coor2, dirWithDoor):
     pass
-def decorkitchen(self, coor1, coor2, doorsCoor):
+def decorDining(self, coor1, coor2, dirWithDoor):
     pass
-def decorDining(self, coor1, coor2, doorsCoor):
-    pass
-def decorLiving(self, coor1, coor2, doorsCoor):
+def decorLiving(self, coor1, coor2, dirWithDoor):
     pass
 
 
@@ -27,21 +89,22 @@ def roomAdjinator(rooms):
             room.walls.add((room.x1, i))
             room.walls.add((room.x2, i))
 
-        room.walls.remove((room.x1, room.z1))
-        room.walls.remove((room.x1, room.z1+1))
-        room.walls.remove((room.x1+1, room.z1))
+        room.wallsEx = room.walls.copy()
+        room.wallsEx.remove((room.x1, room.z1))
+        room.wallsEx.remove((room.x1, room.z1+1))
+        room.wallsEx.remove((room.x1+1, room.z1))
 
-        room.walls.remove((room.x2, room.z1))
-        room.walls.remove((room.x2, room.z1+1))
-        room.walls.remove((room.x2-1, room.z1))
+        room.wallsEx.remove((room.x2, room.z1))
+        room.wallsEx.remove((room.x2, room.z1+1))
+        room.wallsEx.remove((room.x2-1, room.z1))
 
-        room.walls.remove((room.x1, room.z2))
-        room.walls.remove((room.x1, room.z2-1))
-        room.walls.remove((room.x1+1, room.z2))
+        room.wallsEx.remove((room.x1, room.z2))
+        room.wallsEx.remove((room.x1, room.z2-1))
+        room.wallsEx.remove((room.x1+1, room.z2))
 
         # room.walls.remove((room.x2, room.z2))
-        room.walls.remove((room.x2, room.z2-1))
-        room.walls.remove((room.x2-1, room.z2))
+        room.wallsEx.remove((room.x2, room.z2-1))
+        room.wallsEx.remove((room.x2-1, room.z2))
 
         # print('walls done')
         # print(len(room.walls))
@@ -52,7 +115,7 @@ def roomAdjinator(rooms):
     for roomi in rooms:
         for roomj in rooms:
             #print(roomi.walls.intersection(roomj.walls))
-            if roomi != roomj and len(roomi.walls.intersection(roomj.walls)) > 0:
+            if roomi != roomj and len(roomi.wallsEx.intersection(roomj.wallsEx)) > 0:
                 roomi.adj.add(roomj)
                 roomj.adj.add(roomi)
 
@@ -88,17 +151,45 @@ def roomCull(rooms):
 
 def roomAdd(rooms):
     # adds walls between every room
+    outWalls = set()
     for room in rooms:
         for adj in room.adj:
             if adj in rooms:
-                room.doors.append(list(room.walls.intersection(adj.walls))[0])
+                door = list(room.wallsEx.intersection(adj.wallsEx))[0]
+                if door[0] == room.x1:
+                    door = door + tuple('x1')
+                elif door[0] == room.x2:
+                    door = door + tuple('x2')
+                elif door[1] == room.z1:
+                    door = door + tuple('z1')
+                elif door[1] == room.z2:
+                    door = door + tuple('z2')
 
-    rooms[0].doors.append((rooms[0].x1 +3, rooms[0].z1))
+                room.doors.append(door)
+
+        outWalls.symmetric_difference_update(room.walls)
+
+    fDoor = random.choice(list(outWalls))
+
+    for room in rooms:
+        if fDoor in list(room.walls):
+            if fDoor[0] == room.x1:
+                fDoor = fDoor + tuple('x1')
+            elif fDoor[0] == room.x2:
+                fDoor = fDoor + tuple('x2')
+            elif fDoor[1] == room.z1:
+                fDoor = fDoor + tuple('z1')
+            elif fDoor[1] == room.z2:
+                fDoor = fDoor + tuple('z2')
+
+            room.doors.append(fDoor)
+            room.decor = 'front'
     return rooms
 
 def roomMitosis(room):
     # Tests if the room is big enough to split
-    if abs(room.x1 - room.x2) >= 13 or abs(room.z1 - room.z2) >= 13:
+    minSize = random.randint(13, 16)
+    if abs(room.x1 - room.x2) >= minSize or abs(room.z1 - room.z2) >= minSize:
 
         # decides if we split in the x or yaxis
         zorx = random.randint(0,2)
@@ -107,10 +198,10 @@ def roomMitosis(room):
         xof = 6
 
         # sets the split direction depending if the room will be to small
-        if abs(room.x1 - room.x2) < 13:
+        if abs(room.x1 - room.x2) < minSize:
             zorx = 0
             xof = 1
-        if abs(room.z1 - room.z2) < 13:
+        if abs(room.z1 - room.z2) < minSize:
             zorx = 1
             zof = 1
 
@@ -194,7 +285,9 @@ class House:
 
     def build(self, mc):
 
-        for room in self.inRooms:
+        for room in reversed(self.inRooms):
+
+            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z2, 0)
 
             mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +3, room.z2, self.palette.walls)
             mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +3, room.z2, self.palette.walls)
@@ -202,12 +295,12 @@ class House:
             mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, self.palette.walls)
 
             mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, self.palette.floor)
-            #mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
+            mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
 
-            mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +4, room.z1, self.palette.trim)
-            mc.setBlocks(room.x1, room.y, room.z2, room.x1, room.y +4, room.z2, self.palette.trim)
-            mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
-            mc.setBlocks(room.x2, room.y, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
+            mc.setBlocks(room.x1, self.y-10, room.z1, room.x1, room.y +4, room.z1, self.palette.trim)
+            mc.setBlocks(room.x1, self.y-10, room.z2, room.x1, room.y +4, room.z2, self.palette.trim)
+            mc.setBlocks(room.x2, self.y-10, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
+            mc.setBlocks(room.x2, self.y-10, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
 
         for room in self.inRooms:
             for door in room.doors:
@@ -216,7 +309,10 @@ class House:
                 mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))
                 mc.setBlock(door[0], room.y+1, door[1], block.DOOR_WOOD.withData(0))
 
-    
+    def decorate(self,mc):
+        pass
+        #TODO iterate through every room object and decide the decor type, decorate it
+
 
 
 
@@ -229,7 +325,7 @@ if __name__ == '__main__':
 
     x, y, z = mc.player.getPos()
 
-    house = House(int(x), int(y), int(z), 25, 25)
+    house = House(int(x), int(y), int(z), 20, 20)
 
     house.generateRooms()
     house.build(mc)

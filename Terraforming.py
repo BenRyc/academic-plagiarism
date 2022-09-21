@@ -571,13 +571,13 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     print("Anchor stored")
     mc.postToChat("Anchor stored")
 
-    print("Size of the house's X is:" + str(sizehouseX))
-    mc.postToChat("Size of the house's X is:" + str(sizehouseX))
-    print("Size of the house's Z is:" + str(sizehouseZ))
-    mc.postToChat("Size of the house's Z is:" + str(sizehouseZ))
+    print("Size of the house's X is:" + str(sizeHouseX))
+    mc.postToChat("Size of the house's X is:" + str(sizeHouseX))
+    print("Size of the house's Z is:" + str(sizeHouseZ))
+    mc.postToChat("Size of the house's Z is:" + str(sizeHouseZ))
 
-    sizeX = sizehouseX + (len(layers) - 1) * 2
-    sizeZ = sizehouseZ + (len(layers) - 1) * 2
+    sizeX = sizeHouseX + (len(layers) - 1) * 2
+    sizeZ = sizeHouseZ + (len(layers) - 1) * 2
 
     print("Size of the overall X is:" + str(sizeX))
     mc.postToChat("Size of the overall X is:" + str(sizeX))

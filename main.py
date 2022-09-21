@@ -1,4 +1,9 @@
+
+
+# from __future__ import absolute_import, division, print_function
+# from __future__ import unicode_literals
 from mcpi import minecraft
+from mcpi import block
 import random
 import House    
 import Terraforming
@@ -18,7 +23,7 @@ if __name__ == '__main__':
     numHouses = random.randint(5,15)
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
-    minDistance = 10
+    minDistance = 4
     
     for i in range(numHouses):
         
@@ -61,12 +66,13 @@ if __name__ == '__main__':
     
     #TODO DELETE
     #illustrates the house placement, for testing
-    '''
-    for house in houseList:
-        for ax in range(house.x, house.x+house.width):
-            for az in range(house.z, house.z+house.length):
-                mc.setBlock(ax, y, az, 159,random.randint(0,16))
-    '''
+    # 
+    # randomColour = random.randint(0,16)
+    # for house in houseList:
+    #     for ax in range(house.x, house.x+house.width):
+    #         for az in range(house.z, house.z+house.length):
+    #             mc.setBlock(ax, y, az, 159, randomColour)
+
     ########################################################################
     #                           TERRAFORMING                               #
     ########################################################################
@@ -93,4 +99,6 @@ if __name__ == '__main__':
     ########################################################################
     #                           GENERATE HOUSE                             #
     ########################################################################
-
+    for house in houseList:
+        house.generateRooms()
+        house.build(mc)
