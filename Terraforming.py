@@ -16,7 +16,7 @@ try:
 except ImportError:
     import Queue as queue
     
-def teraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
+def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
         
     class Layer():
         def __init__(self):
@@ -637,6 +637,6 @@ def teraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     print("Foundation placed, all done!")
     mc.postToChat("Foundation placed, all done!")
     
-    return foundation.getAvg()
+    return foundation.getCoords(), foundation.getBlocks()
 
 

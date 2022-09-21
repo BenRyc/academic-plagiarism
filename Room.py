@@ -12,6 +12,7 @@ class Room:
         self.decor = decor
 
         self.walls = set()
+        self.wallsEx = set()
         self.adj = set()
 
     def __str__(self):
