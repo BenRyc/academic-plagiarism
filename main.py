@@ -1,7 +1,7 @@
 from mcpi import minecraft
 import random
-import House
-import Teraforming
+import House    
+import Terraforming
 
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
@@ -76,8 +76,8 @@ if __name__ == '__main__':
     print("Generating terrain")
     
     for house in houseList:
-        house.y = Terraforming.terraform(house.x+house.length, house,z+house.width, length, width)
-        
+        house.foundation = Terraforming.terraform(house.x+house.length, house.z+house.width, length, width)
+        house.y = house.foundation[0][1]
     ########################################################################
     #                           GENERATE HOUSE                             #
     ########################################################################
