@@ -1,8 +1,15 @@
 from mcpi import minecraft
 from mcpi import block
+from mctools import RCONClient
+from mcrcon import MCRcon
+
 
 mc = minecraft.Minecraft.create()
 
-playerPos = mc.player.getPos()
+mcr = MCRcon('localhost', 8080)
+mcr.connect()
+resp = mcr.command("/whitelist add bob")
+print(resp)
+mcr.disconnect()
 
-print(mc.getBlockWithData(playerPos.x, playerPos.y -1, playerPos.z))
+playerPos = mc.player.getPos()
