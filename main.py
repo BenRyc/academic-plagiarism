@@ -22,7 +22,8 @@ if __name__ == '__main__':
     
     for i in range(numHouses):
         
-        #TODO delete print statement below, just for debugging to check progress
+        # TODO DELETE 
+        # Just for debugging to check progress
         print(f'Initialising house {i}/{numHouses}')
         
         #randomise size
@@ -39,7 +40,15 @@ if __name__ == '__main__':
             #generates coordinates occuppied by the house (including buffer for minimum distance)
             houseCoor = set()
             for ax in range(chosenX-(minDistance//2), chosenX+width+(minDistance//2)):
+                
+                #TODO DELETE
+                print(f'ax = {ax}')
+                
                 for az in range(chosenZ-(minDistance//2), chosenZ+length+(minDistance//2)):
+                    
+                    #TODO DELETE
+                    print(f'az = {az}')
+                    
                     houseCoor.add((ax,az))
                     
             #checks if the house position doesnt't overlap
@@ -64,7 +73,8 @@ if __name__ == '__main__':
     #                           TERRAFORMING                               #
     ########################################################################
 
-    #TODO Delete below print statement, just for debugging to check progress
+    # TODO DELETE 
+    # Just for debugging to check progress
     print("Generating terrain")
     
     for house in houseList:
