@@ -637,6 +637,6 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     print("Foundation placed, all done!")
     mc.postToChat("Foundation placed, all done!")
     
-    return foundation.getCoords()
+    return foundation.getCoords(), foundation.getBlocks()
 
 

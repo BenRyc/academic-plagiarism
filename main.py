@@ -22,9 +22,6 @@ if __name__ == '__main__':
     
     for i in range(numHouses):
         
-        # TODO DELETE 
-        print(f'Initialising house {i}/{numHouses}')
-        
         #randomise size
         length = random.randint(13,25) #along x
         width = random.randint(13,25) #along z
@@ -40,12 +37,12 @@ if __name__ == '__main__':
             houseCoor = set()
             for ax in range(chosenX-(minDistance//2), chosenX+width+(minDistance//2)):
                 
-                #TODO DELETE
+                #TODO DELETE PRINT
                 print(f'Initialising house {i}/{numHouses}, ax = {ax}')
                 
                 for az in range(chosenZ-(minDistance//2), chosenZ+length+(minDistance//2)):
                     
-                    #TODO DELETE
+                    #TODO DELETE PRINT
                     print(f'Initialising house {i}/{numHouses}, az = {az}')
                     
                     houseCoor.add((ax,az))
@@ -72,12 +69,24 @@ if __name__ == '__main__':
     #                           TERRAFORMING                               #
     ########################################################################
 
-    # TODO DELETE 
+    # TODO DELETE PRINT
     print("Generating terrain")
     
     for house in houseList:
-        house.foundation = Terraforming.terraform(house.x+house.length, house.z+house.width, length, width)
+        house.foundation, house.foundationBlocks = Terraforming.terraform(house.x+house.length, house.z+house.width, length, width)
         house.y = house.foundation[0][1]
+        
+    #TODO DELETE PRINT
+    print("Finalizing foundations")
+    
+    for house in houseList:
+        for index in range(len(house.foundation)-1):
+            x = house.foundation[index][0]
+            y = house.foundation[index][1]
+            z = house.foundation[index][2]
+            blockID = house.foundationBlocks[index][0]
+            blockData = house.foundationBlocks[index][1]
+            mc.setBlock(x, y, z, blockID, blockData)
         
     ########################################################################
     #                           GENERATE HOUSE                             #
