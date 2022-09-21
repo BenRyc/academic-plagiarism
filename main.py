@@ -1,6 +1,7 @@
 from mcpi import minecraft
 import random
 import House
+import Teraforming
 
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
@@ -44,17 +45,25 @@ if __name__ == '__main__':
                 posFound = True
 
         #add new house object
-        houseList.append(House.newHouse(chosenX, chosenZ, length, width))
+        houseList.append(House.newHouse(chosenX, None, chosenZ, length, width))
         scanDiameter = scanDiameter + 5
     
     #TODO DELETE
     #illustrates the house placement, for testing
+    '''
     for house in houseList:
         for ax in range(house.x, house.x+house.width):
             for az in range(house.z, house.z+house.length):
                 mc.setBlock(ax, y, az, 159,random.randint(0,16))
-
+    '''
     ########################################################################
-    #                    CALLING ALL OTHER COMPONENTS                      #
+    #                           TERRAFORMING                               #
+    ########################################################################
+
+    for house in houseList:
+        house.y = Teraforming.terraform(house.x+house.length, house,z+house.width, length, width)
+        
+    ########################################################################
+    #                           GENERATE HOUSE                             #
     ########################################################################
 
