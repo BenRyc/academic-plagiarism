@@ -23,7 +23,6 @@ if __name__ == '__main__':
     for i in range(numHouses):
         
         # TODO DELETE 
-        # Just for debugging to check progress
         print(f'Initialising house {i}/{numHouses}')
         
         #randomise size
@@ -74,7 +73,6 @@ if __name__ == '__main__':
     ########################################################################
 
     # TODO DELETE 
-    # Just for debugging to check progress
     print("Generating terrain")
     
     for house in houseList:
