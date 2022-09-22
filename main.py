@@ -25,6 +25,9 @@ if __name__ == '__main__':
     scanDiameter = 13 #increases after every house placement
     minDistance = 4
     
+    #TODO DELETE THIS
+    numHouses = 2
+    
     for i in range(numHouses):
         
         #randomise size
@@ -92,8 +95,8 @@ if __name__ == '__main__':
             x = house.foundation[index][0]
             y = house.foundation[index][1]
             z = house.foundation[index][2]
-            blockID = house.foundationBlocks[index][0]
-            blockData = house.foundationBlocks[index][1]
+            blockID = house.foundationBlocks[index].id
+            blockData = house.foundationBlocks[index].data
             mc.setBlock(x, y, z, blockID, blockData)
         
     ########################################################################
