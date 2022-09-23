@@ -1,11 +1,10 @@
-
 from __future__ import absolute_import, division, print_function
 from __future__ import unicode_literals
 from mcpi import minecraft
 from mcpi import block
 import picraft
 from picraft import Vector, X, Y, Z
-
+import numpy as np
 import collections
 import io
 import random
@@ -188,7 +187,7 @@ def alt_picraft_getheight_vrange(world, vrange):
     Alternate design: If thread_count > 1 is desired, this could
     first get the query_blocks dict, then iterate vrange again.
     """
-    print(vrange)
+    #print(vrange)
     return [Vector(pos[0], data, pos[1]) for (pos, data) in
             query_blocks(world.connection,
                          ((v[0], v[2]) for v in vrange),
@@ -284,7 +283,7 @@ def astar(maze, start, end):
             #print(NodePosition)
             #y=(mc.getHeight(NodePosition))
             #mc.setBlock(NodePosition[0],y,NodePosition[1],4)
-            
+           
             children.append(new_node)
 
         # Loop through children
@@ -298,23 +297,20 @@ def astar(maze, start, end):
             # Create the f, g, and h values
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
-            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))*30
-            print(maze[child.position[0]][child.position[1]])
-            print(child.position[0]-translated[0])
-            print(child.position[1]-translated[1])
-            #print(CurrentNode.p
-            print(CurrentNode.p)
+            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))
+            #print(CurrentNode.p)
+            #print(CurrentNode.p)
 
             x = child.position[0]-translated[0]
             z = child.position[1]-translated[1]
-            y=mc.getHeight(x,z)
+            #y=mc.getHeight(x,z)
             #print (mc.getHeight)
-            mc.setBlock(x,y,z,20)
+            mc.setBlock(x,maze[child.position[0]][child.position[1  ]],z,4)
             #print(child.position)
 
             #print(translated[0])
             #print(x)
-            
+           
            # print(translated[1])
             #print(z)
             #print(x)
@@ -371,8 +367,9 @@ def main():
             val2 = listval2[1]-translatedval[1]-5
 
 
-
-        cuboid = picraft.vector_range(Vector(val1, 0, val2), Vector(val1+100, 0, val2+100) + 1)
+        print(val1)
+        print(val2)
+        cuboid = picraft.vector_range(Vector(val1, 0, val2), Vector(val1+99, 0, val2+99) + 1)
         my_blocks = {}
         for pos, blk in query_blocks(
                 world.connection,
@@ -382,7 +379,7 @@ def main():
                 thread_count=0):
             my_blocks[pos] = blk
         #print(my_blocks)
-        
+       
         x = alt_picraft_getblock_vrange(world, cuboid)
         #print(x)
         y = world.blocks[cuboid]
@@ -395,10 +392,10 @@ def main():
             #print(i)
         #for i in h:
             #print(i)
-    start = [6015,6060]
-    end = [6060,6020]
-    
-    translated = [6015,6060]
+    start = [450, 0]
+    end = [500,75]
+   
+    translated = [450,0]
     #print(start, end)
     if start[0]<5:
         tempStore = start[0]
@@ -421,7 +418,7 @@ def main():
         end[1]=5
         dif = tempStore-end[1]
         start[1]-=dif
-        
+       
     if start[0]>95:
         tempStore = start[0]
         start[0]=95
@@ -439,7 +436,7 @@ def main():
         end[0]=95
         dif = tempStore-end[0]
         start[0]-=dif
-        
+       
     if end[1]>95:
         tempStore = end[1]
         end[1]=95
@@ -459,36 +456,49 @@ def main():
     e = (end[0], end[1])
     #print(translated)
     maze = []
-    for i in range (0,100):
-        nrow = []
-        for j in range (0,100):
-            x = random.randint(1, 3)
-            hval = j+100*i
-            nrow.append(int(h[hval].y))
-        maze.append(nrow)
-        print(nrow)
-    #print(maze)
-    #print(maze)
+    iter = 0
+    prevx = h[0].x
+    nrow = []
+    for i in h:
+        currx = i.x
+        mc.setBlock(i,5)
+        if prevx != currx:
+            maze.append(nrow)
+            nrow = []
+            print("newrow")
+        else:
+            nrow.append(i.y)
+        
+        prevx = i.x
+    #for i in range (0,100):
+    #    nrow = []
+    #    for j in range (0,100):
+    #        #x = random.randint(1, 3)
+    #        hval = j+100*i
+    #        nrow.append(int(h[hval].y))
+    #        mc.setBlock(h[hval],5)
+    #        #print(h[0])
+    #        #print(h[100])
+    #    maze.append(nrow)
+    #print(maze[-2])
         #print(nrow)
-    
+    print(maze)
+    #print(maze[0][99])
+        #print(nrow)
+   
     #print(maze)
 
     Path = astar(maze, s, e)
-    print(Path)
+    #print(Path)
     for i in Path:
 
 
-        y=(mc.getHeight(i))
         #print(translated[0])
         #print("translation")
         #print(translated[0])
         #print(translated[1])
         #print(i[0])
         #print(i[1])
-        print(i[0])
-        print(i[1])
-        print(-translated[0])
-        print(-translated[1])
         x = i[0] -translated[0]
         #print(x)
         z = i[1] -translated[1]
@@ -497,18 +507,10 @@ def main():
         #print(z)
         y = mc.getHeight(x,z)
         #print(x,z)
-        mc.setBlock(x,y,z,8)
-        if (x+1,z) not in Path:
-            mc.setBlock(x+1,y,z,4)
-        if (x-1,z) not in Path:
-            mc.setBlock(x-1,y,z,4)
-        if (x,z+1) not in Path:
-            mc.setBlock(x,y,z+1,4)
-        if (x,z-1) not in Path:
-            mc.setBlock(x,y,z,4)
+        mc.setBlock(x,y,z,60)
         #print(maze)
-        
+       
 
 if __name__ == '__main__':
     main()
-#check for places already gone over, if taken already then add to closed list. 
+#check for places already gone over, if taken already then add to closed list.
