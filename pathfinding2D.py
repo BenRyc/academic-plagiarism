@@ -297,7 +297,7 @@ def astar(maze, start, end):
             # Create the f, g, and h values
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
-            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))
+            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))*30
             #print(CurrentNode.p)
             #print(CurrentNode.p)
 
@@ -442,6 +442,26 @@ def main():
         end[1]=95
         dif = tempStore-end[1]
         start[1]-=dif
+    if start[0]<=end[0]:
+        tempStore = start[0]
+        start[0]=5
+        dif = tempStore-start[0]
+        end[0]-=dif
+    if start[0]>end[0]:
+        tempStore = end[0]
+        end[0]=5
+        dif = tempStore-end[0]
+        start[0]-=dif
+    if start[1]<=end[1]:
+        tempStore = start[1]
+        start[1]=5
+        dif = tempStore-start[1]
+        end[1]-=dif
+    if start[1]>end[1]:
+        tempStore = end[1]
+        end[1]=5
+        dif = tempStore-end[1]
+        start[1]-=dif
 
 
 
@@ -459,17 +479,24 @@ def main():
     iter = 0
     prevx = h[0].x
     nrow = []
+    print(h)
     for i in h:
         currx = i.x
-        mc.setBlock(i,5)
+        #mc.setBlock(i,5)
         if prevx != currx:
             maze.append(nrow)
-            nrow = []
-            print("newrow")
+            nrow = [0]
+            #print("newrow")
         else:
-            nrow.append(i.y)
+            if i.x == "xx" and i.y == "yy":
+                nrow.append(-1)
+            else:
+                nrow.append(i.y)
         
         prevx = i.x
+    for i in h:
+        mc.setBlock(i,5)
+
     #for i in range (0,100):
     #    nrow = []
     #    for j in range (0,100):
@@ -509,6 +536,11 @@ def main():
         #print(x,z)
         mc.setBlock(x,y,z,60)
         #print(maze)
+        print(maze[0][0])
+        print(maze[(445+translated[0])][(74+translated[1])])
+        print(start[0])
+        print(end[0])
+        print(translated[0])
        
 
 if __name__ == '__main__':
