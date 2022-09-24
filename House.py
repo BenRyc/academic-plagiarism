@@ -161,8 +161,7 @@ def roomCull(rooms):
 
 def roomAdd(rooms):
     # adds walls between every room
-    outWalls = set() # a set of all the walls on the ouside of the house
-    avalableWalls = set() # a set of all the walls not including the corner blocks
+
     # iterates through the room list making a door between each adjacent room
 
     for room in rooms:
@@ -182,39 +181,6 @@ def roomAdd(rooms):
             room.doors.append(door)
 
             # out walls
-
-
-
-        print()
-        print(len(room.adj), len(room.doors))
-        print()
-        outWalls.update(room.wallsOut)
-        avalableWalls.update(room.wallsEx)
-
-    # making the front door out of one of the external walls that is not a corner
-    outWalls.intersection_update(avalableWalls)
-    fDoor = random.choice(list(outWalls))
-    outWalls.remove(fDoor)
-
-    for room in rooms:
-        # if the door is a part of a room it will be added to the room
-        if fDoor in list(room.wallsOut):
-            # seting the side of the room the door is on
-            if fDoor[0] == room.x1:
-                fDoor = fDoor + tuple('x1')
-            elif fDoor[0] == room.x2:
-                fDoor = fDoor + tuple('x2')
-            elif fDoor[1] == room.z1:
-                fDoor = fDoor + tuple('z1')
-            elif fDoor[1] == room.z2:
-                fDoor = fDoor + tuple('z2')
-
-            # seting the room type
-            fDoor = fDoor + tuple('F')
-            room.doors.append(fDoor)
-            room.decor = 'front'
-
-
 
     return rooms
 
@@ -316,6 +282,34 @@ class House:
                         if len(door) == 4:
                             room.doors.remove(door)
                             room.decor = None
+            if i == 0:
+                outWalls = set() # a set of all the walls on the ouside of the house
+                avalableWalls = set() # a set of all the walls not including the corner blocks
+                for room in inRooms:
+                    outWalls.update(room.wallsOut)
+                    avalableWalls.update(room.wallsEx)
+
+                # making the front door out of one of the external walls that is not a corner
+                outWalls.intersection_update(avalableWalls)
+                fDoor = random.choice(list(outWalls))
+
+                for room in rooms:
+                    # if the door is a part of a room it will be added to the room
+                    if fDoor in list(room.wallsOut):
+                        # seting the side of the room the door is on
+                        if fDoor[0] == room.x1:
+                            fDoor = fDoor + tuple('x1')
+                        elif fDoor[0] == room.x2:
+                            fDoor = fDoor + tuple('x2')
+                        elif fDoor[1] == room.z1:
+                            fDoor = fDoor + tuple('z1')
+                        elif fDoor[1] == room.z2:
+                            fDoor = fDoor + tuple('z2')
+
+                        # seting the room type
+                        fDoor = fDoor + tuple('F')
+                        room.doors.append(fDoor)
+                        room.decor = 'front'
 
 
         # adds doors to the rooms
