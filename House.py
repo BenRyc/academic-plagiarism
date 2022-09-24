@@ -152,6 +152,11 @@ def roomCull(rooms):
     for room in inRooms:
         room.adj.difference_update(outRooms)
 
+    for room in inRooms:
+        room.wallsOut = room.walls.copy()
+        for adj in room.adj:
+            room.wallsOut.difference_update(adj.walls)
+
     return inRooms, outRooms
 
 def roomAdd(rooms):
@@ -160,12 +165,8 @@ def roomAdd(rooms):
     avalableWalls = set() # a set of all the walls not including the corner blocks
     # iterates through the room list making a door between each adjacent room
 
-    outWalls = set()
     for room in rooms:
-        room.wallsOut = room.walls.copy()
-        print(room)
-        print(room.adj)
-        print(room.doors)
+
         for adj in range(len(list(room.adj))):
             door = list(room.wallsEx.intersection(list(room.adj)[adj].wallsEx))[0]
             # seting the side of the room the door is on
@@ -181,7 +182,7 @@ def roomAdd(rooms):
             room.doors.append(door)
 
             # out walls
-            room.wallsOut.difference_update(list(room.adj)[adj].walls)
+
 
 
         print()
@@ -213,18 +214,10 @@ def roomAdd(rooms):
             room.doors.append(fDoor)
             room.decor = 'front'
 
-    windows = outWalls
-    # makes a master list of al the windows in the house by randomly picking from the avalable blocks
-    # for i in range(0, int(len(outWalls)/1.2)):
-    #     windows.add(random.choice(list(outWalls)))
 
-    # checks if the window is a part of the room and if so adds it
-    for window in list(windows):
-        for room in rooms:
-            if window in list(room.walls):
-                room.windows.append(window)
 
     return rooms
+
 
 def roomMitosis(room):
     # Tests if the room is big enough to split
@@ -314,8 +307,6 @@ class House:
             # splits the rooms into rooms that are going to be biuld and ones that are not
             inRooms, outRooms = roomCull(rooms)
 
-            # adds doors to the rooms
-            inRooms = roomAdd(inRooms)
             # appends the new rooms to the master room list
             for room in inRooms:
                 self.inRooms.append(room)
@@ -327,6 +318,8 @@ class House:
                             room.decor = None
 
 
+        # adds doors to the rooms
+        self.inRooms = roomAdd(self.inRooms)
 
     def build(self, mc):
 
@@ -355,12 +348,14 @@ class House:
             mc.setBlocks(room.x2, self.y-10, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x2, self.y-10, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
 
+
         for room in self.inRooms:
 
-            for window in room.windows:
+            for window in list(room.wallsOut.intersection(room.wallsEx)):
                 mc.setBlocks(window[0], room.y+2, window[1], window[0], room.y+3, window[1], block.GLASS)
 
             for door in room.doors:
+                print(door)
                 mc.setBlock(door[0], room.y +2, door[1], door[0], room.y +1, door[1], 0)
 
                 mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))
