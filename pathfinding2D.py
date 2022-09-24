@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 from __future__ import unicode_literals
+from pathlib import Path
 from mcpi import minecraft
 from mcpi import block
 import picraft
@@ -13,6 +14,7 @@ import socket
 import threading
 import time
 import timeit
+import math
 try:
     import queue
 except ImportError:
@@ -258,7 +260,7 @@ def astar(maze, start, end):
             while Current is not None:
                 Path.append(Current.position)
                 Current = Current.parent
-                #print(Path)
+                print(Path)
             return Path[::-1] # Return reversed Path
 
         # Generate children
@@ -297,7 +299,17 @@ def astar(maze, start, end):
             # Create the f, g, and h values
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
-            child.p = abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))*30
+            multi = 15
+            if child.h < 200:
+                multi = 30
+            if child.h < 100:
+                multi = 12
+            if child.h < 60:
+                multi = 10
+            if child.h < 30:
+                multi = 0
+            else:
+                child.p = math.log(abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))+1,math.e)*multi
             #print(CurrentNode.p)
             #print(CurrentNode.p)
 
@@ -305,7 +317,7 @@ def astar(maze, start, end):
             z = child.position[1]-translated[1]
             #y=mc.getHeight(x,z)
             #print (mc.getHeight)
-            mc.setBlock(x,maze[child.position[0]][child.position[1  ]],z,4)
+            #mc.setBlock(x,maze[child.position[0]][child.position[1]],z,4)
             #print(child.position)
 
             #print(translated[0])
@@ -392,156 +404,206 @@ def main():
             #print(i)
         #for i in h:
             #print(i)
-    start = [450, 0]
-    end = [500,75]
-   
-    translated = [450,0]
-    #print(start, end)
-    if start[0]<5:
-        tempStore = start[0]
-        start[0]=5
-        dif = tempStore-start[0]
-        end[0]-=dif
-    if start[1]<5:
-        tempStore = start[1]
-        start[1]=5
-        dif = tempStore-start[1]
-        end[1]-=dif
-
-    if end[0]<5:
-        tempStore = end[0]
-        end[0]=5
-        dif = tempStore-end[0]
-        start[0]-=dif
-    if end[1]<5:
-        tempStore = end[1]
-        end[1]=5
-        dif = tempStore-end[1]
-        start[1]-=dif
-       
-    if start[0]>95:
-        tempStore = start[0]
-        start[0]=95
-        dif = tempStore-start[0]
-        end[0]-=dif
-
-    if start[1]>95:
-        tempStore = start[1]
-        start[1]=95
-        dif = tempStore-start[1]
-        end[1]-=dif
-
-    if end[0]>95:
-        tempStore = end[0]
-        end[0]=95
-        dif = tempStore-end[0]
-        start[0]-=dif
-       
-    if end[1]>95:
-        tempStore = end[1]
-        end[1]=95
-        dif = tempStore-end[1]
-        start[1]-=dif
-    if start[0]<=end[0]:
-        tempStore = start[0]
-        start[0]=5
-        dif = tempStore-start[0]
-        end[0]-=dif
-    if start[0]>end[0]:
-        tempStore = end[0]
-        end[0]=5
-        dif = tempStore-end[0]
-        start[0]-=dif
-    if start[1]<=end[1]:
-        tempStore = start[1]
-        start[1]=5
-        dif = tempStore-start[1]
-        end[1]-=dif
-    if start[1]>end[1]:
-        tempStore = end[1]
-        end[1]=5
-        dif = tempStore-end[1]
-        start[1]-=dif
-
-
-
-    #print(start, end)
-
-    translated = [-(translated[0]-start[0]),-(translated[1]-start[1])]
-    getVals(start,end, translated)
-    print(start, end)
-    #print(start)
-    #print(end)
-    s = (start[0], start[1])
-    e = (end[0], end[1])
-    #print(translated)
-    maze = []
-    iter = 0
-    prevx = h[0].x
-    nrow = []
-    print(h)
-    for i in h:
-        currx = i.x
-        #mc.setBlock(i,5)
-        if prevx != currx:
-            maze.append(nrow)
-            nrow = [0]
-            #print("newrow")
-        else:
-            if i.x == "xx" and i.y == "yy":
-                nrow.append(-1)
+    def newpath(start,end,translated):
+        getVals(start,end, translated)
+        print(start, end)
+        #print(start)
+        #print(end)
+        s = (start[0], start[1])
+        e = (end[0], end[1])
+        #print(translated)
+        maze = []
+        iter = 0
+        prevx = h[0].x
+        nrow = []
+        #print(h)
+        for i in h:
+            currx = i.x
+            #mc.setBlock(i,5)
+            if prevx != currx:
+                maze.append(nrow)
+                nrow = [0]
+                #print("newrow")
             else:
-                nrow.append(i.y)
-        
-        prevx = i.x
-    for i in h:
-        mc.setBlock(i,5)
+                if i.x == "xx" and i.y == "yy":
+                    nrow.append(-1)
+                else:
+                    nrow.append(i.y)
+            
+            prevx = i.x
+        #for i in h:
+            #mc.setBlock(i,5)
 
-    #for i in range (0,100):
-    #    nrow = []
-    #    for j in range (0,100):
-    #        #x = random.randint(1, 3)
-    #        hval = j+100*i
-    #        nrow.append(int(h[hval].y))
-    #        mc.setBlock(h[hval],5)
-    #        #print(h[0])
-    #        #print(h[100])
-    #    maze.append(nrow)
-    #print(maze[-2])
-        #print(nrow)
-    print(maze)
-    #print(maze[0][99])
-        #print(nrow)
-   
-    #print(maze)
-
-    Path = astar(maze, s, e)
-    #print(Path)
-    for i in Path:
-
-
-        #print(translated[0])
-        #print("translation")
-        #print(translated[0])
-        #print(translated[1])
-        #print(i[0])
-        #print(i[1])
-        x = i[0] -translated[0]
-        #print(x)
-        z = i[1] -translated[1]
-        #print(z)
-        #print(x)
-        #print(z)
-        y = mc.getHeight(x,z)
-        #print(x,z)
-        mc.setBlock(x,y,z,60)
+        #for i in range (0,100):
+        #    nrow = []
+        #    for j in range (0,100):
+        #        #x = random.randint(1, 3)
+        #        hval = j+100*i
+        #        nrow.append(int(h[hval].y))
+        #        mc.setBlock(h[hval],5)
+        #        #print(h[0])
+        #        #print(h[100])
+        #    maze.append(nrow)
+        #print(maze[-2])
+            #print(nrow)
         #print(maze)
-        print(maze[0][0])
-        print(maze[(445+translated[0])][(74+translated[1])])
-        print(start[0])
-        print(end[0])
-        print(translated[0])
-       
+        #print(maze[0][99])
+            #print(nrow)
+    
+        #print(maze)
+        print(s)
+        print(e)
+        
+        Path = astar(maze, s, e)
+        #print(Path)
+        for i in Path:
+
+
+            #print(translated[0])
+            #print("translation")
+            #print(translated[0])
+            #print(translated[1])
+            #print(i[0])
+            #print(i[1])
+            x = i[0] -translated[0]
+            #print(x)
+            z = i[1] -translated[1]
+            #print(z)
+            #print(x)
+            #print(z)
+            y = mc.getHeight(x,z)
+            #print(x,z)
+            mc.setBlock(x,y,z,246)
+            #print(maze)
+            print(maze[0][0])
+            #print(maze[(445+translated[0])][(74+translated[1])])
+            print(start[0])
+            print(end[0])
+            print(translated[0])
+        return Path
+
+    doors = [[4040,4000], [4014,4055],[4050,4030],[4010,4010],[3980, 3990]]
+    mindival1 = doors[0]
+    mindival2 = doors[1]
+    mindist = 999999999
+    ndoors = []
+    for i in doors:
+        d1 = i
+        for j in doors:
+            d2 = j
+            if d1 == d2:
+                continue
+            else:
+                if mindist>(i[0]-j[0])**2+(i[1]+j[1])**2:
+                    mindist = (i[0]-j[0])**2+(i[1]+j[1])**2
+                    mindival1 = i
+                    mindival2 = j
+    for i in range(0,len(doors)-1):
+        if i == 0:
+            start = [int(mindival1[0]),int(mindival1[1])]
+            end = [int(mindival2[0]),int(mindival2[1])]
+            translated = [int(start[0]),int(start[1])]
+            
+            print(start)
+            print(end)
+            print(translated)
+            print("ahhh")
+            ndoors.append(start)
+            ndoors.append(end)
+
+            #ndoors.remove([start])
+            #ndoors.remove([end])
+        else:
+            if i in ndoors:
+                continue
+                
+            rnum = random.randint(0,len(p))
+            start = doors[i]
+            end = [p[rnum][0]-prevtrans[0],p[rnum][1]-prevtrans[1]]
+            translated = [int(start[0]),int(start[1])]
+            print(start)
+            print(end)
+            print(translated)
+            print("fjafaf")
+
+        #start = [450, 0]
+        #end = [400,75]
+    
+        #translated = [450,0]
+        #print(start, end)
+        if start[0]<5:
+            tempStore = start[0]
+            start[0]=5
+            dif = tempStore-start[0]
+            end[0]-=dif
+        if start[1]<5:
+            tempStore = start[1]
+            start[1]=5
+            dif = tempStore-start[1]
+            end[1]-=dif
+
+        if end[0]<5:
+            tempStore = end[0]
+            end[0]=5
+            dif = tempStore-end[0]
+            start[0]-=dif
+        if end[1]<5:
+            tempStore = end[1]
+            end[1]=5
+            dif = tempStore-end[1]
+            start[1]-=dif
+        
+        if start[0]>95:
+            tempStore = start[0]
+            start[0]=95
+            dif = tempStore-start[0]
+            end[0]-=dif
+
+        if start[1]>95:
+            tempStore = start[1]
+            start[1]=95
+            dif = tempStore-start[1]
+            end[1]-=dif
+
+        if end[0]>95:
+            tempStore = end[0]
+            end[0]=95
+            dif = tempStore-end[0]
+            start[0]-=dif
+        
+        if end[1]>95:
+            tempStore = end[1]
+            end[1]=95
+            dif = tempStore-end[1]
+            start[1]-=dif
+        if start[0]<=end[0]:
+            tempStore = start[0]
+            start[0]=5
+            dif = tempStore-start[0]
+            end[0]-=dif
+        if start[0]>end[0]:
+            tempStore = end[0]
+            end[0]=5
+            dif = tempStore-end[0]
+            start[0]-=dif
+        if start[1]<=end[1]:
+            tempStore = start[1]
+            start[1]=5
+            dif = tempStore-start[1]
+            end[1]-=dif
+        if start[1]>end[1]:
+            tempStore = end[1]
+            end[1]=5
+            dif = tempStore-end[1]
+            start[1]-=dif
+
+
+
+        #print(start, end)
+
+        translated = [-(translated[0]-start[0]),-(translated[1]-start[1])]
+        p = newpath(start,end,translated)
+        prevtrans = translated
 
 if __name__ == '__main__':
     main()
