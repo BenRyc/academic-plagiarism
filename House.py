@@ -117,7 +117,7 @@ def roomAdjinator(rooms):
     for roomi in rooms:
         for roomj in rooms:
             #print(roomi.walls.intersection(roomj.walls))
-            if roomi != roomj and len(roomi.wallsEx.intersection(roomj.wallsEx)) > 0:
+            if roomi != roomj and not roomi.wallsEx.isdisjoint(roomj.wallsEx):
                 roomi.adj.add(roomj)
                 roomj.adj.add(roomi)
 
@@ -149,7 +149,7 @@ def roomCull(rooms):
         if room not in inRooms:
             outRooms.append(room)
 
-    for room in rooms:
+    for room in inRooms:
         room.adj.difference_update(outRooms)
 
     return inRooms, outRooms
@@ -163,30 +163,29 @@ def roomAdd(rooms):
     outWalls = set()
     for room in rooms:
         room.wallsOut = room.walls.copy()
-        for adj in room.adj:
-            if adj in rooms:
-                door = list(room.wallsEx.intersection(adj.wallsEx))[0]
-                # seting the side of the room the door is on
-                if door[0] == room.x1:
-                    door = door + tuple('x1')
-                elif door[0] == room.x2:
-                    door = door + tuple('x2')
-                elif door[1] == room.z1:
-                    door = door + tuple('z1')
-                elif door[1] == room.z2:
-                    door = door + tuple('z2')
-
-                room.doors.append(door)
-
-            # out walls
-            # room.wallsOut.difference_update(adj.walls)
-
-
         print(room)
         print(room.adj)
         print(room.doors)
+        for adj in range(len(list(room.adj))):
+            door = list(room.wallsEx.intersection(list(room.adj)[adj].wallsEx))[0]
+            # seting the side of the room the door is on
+            if door[0] == room.x1:
+                door = door + tuple('x1')
+            elif door[0] == room.x2:
+                door = door + tuple('x2')
+            elif door[1] == room.z1:
+                door = door + tuple('z1')
+            elif door[1] == room.z2:
+                door = door + tuple('z2')
+
+            room.doors.append(door)
+
+            # out walls
+            room.wallsOut.difference_update(list(room.adj)[adj].walls)
+
+
         print()
-        print(len(room.adj) - len(room.doors))
+        print(len(room.adj), len(room.doors))
         print()
         outWalls.update(room.wallsOut)
         avalableWalls.update(room.wallsEx)
@@ -384,6 +383,8 @@ if __name__ == '__main__':
     mc.postToChat("House main")
 
     x, y, z = mc.player.getPos()
+
+    mc.setBlocks(int(x)-25, int(y)-10, int(z)-25, int(x)+25, int(y)+25, int(z)+25, 0)
 
     house = House(int(x), int(y), int(z), 20, 20)
 
