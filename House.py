@@ -34,9 +34,9 @@ def decorBedroom(room, coor1, coor2, dirWithDoor):
     #bedrooms can only have one door
     if len(dirWithDoor) > 1:
         print('bedrooms must have only one wall with doors')
-        return
+        return 
 
-    if '-z' in dirWithDoor:
+    if '-z' in dirWithDoor: 
         #bookshelf
         for i in range(0,room.height):
             mc.setBlock(room.coor2[0],room.coor1[1]+i,room.coor1[2], 47,0)
@@ -45,13 +45,13 @@ def decorBedroom(room, coor1, coor2, dirWithDoor):
         #bed and table
         mc.setBlock(room.coor2[0],room.coor1[1],room.coor2[2]-1,26)
         mc.setBlock(room.coor2[0]-1,room.coor1[1],room.coor2[2],53,6)
-
+        
     elif '+z' in dirWithDoor:
         for i in range(0,room.height):
             mc.setBlock(room.coor1[0],room.coor1[1]+i,room.coor2[2], 47,0)
         mc.setBlock(room.coor2[0],room.coor1[1],room.coor2[2],58)
 
-
+        
 
     elif '+x' in dirWithDoor:
         for i in range(0,room.height):
@@ -64,7 +64,7 @@ def decorBedroom(room, coor1, coor2, dirWithDoor):
         mc.setBlock(room.coor1[0],room.coor1[1],room.coor2[2],58)
         mc.setBlock(room.coor2[0]-1,room.coor1[1],room.coor1[2],26)
         mc.setBlock(room.coor2[0],room.coor1[1],room.coor1[2]+1,53,4)
-
+    
     #place bed and bedside table
     #place desk
 
@@ -81,6 +81,7 @@ def roomAdjinator(rooms):
     # wall adding
 
     for room in rooms:
+        # adds a tuple for each block ing the wall
         for i in range(room.x1, room.x2):
             room.walls.add((i, room.z1))
             room.walls.add((i, room.z2))
@@ -89,6 +90,7 @@ def roomAdjinator(rooms):
             room.walls.add((room.x1, i))
             room.walls.add((room.x2, i))
 
+        # makes a copy of the walls and then removes the corner blocks
         room.wallsEx = room.walls.copy()
         room.wallsEx.remove((room.x1, room.z1))
         room.wallsEx.remove((room.x1, room.z1+1))
@@ -111,7 +113,7 @@ def roomAdjinator(rooms):
         # print((room.x2 - room.x1) *2 + (room.z2 - room.z1) *2 -4)
         # print()
 
-    #adj adding
+    #for every room it tests if every other room shairs and walls making them adjacent
     for roomi in rooms:
         for roomj in rooms:
             #print(roomi.walls.intersection(roomj.walls))
@@ -143,20 +145,30 @@ def roomCull(rooms):
         for room in choice.adj:
             ajRooms.add(room)
 
-    for i in rooms:
+    for room in rooms:
         if room not in inRooms:
             outRooms.append(room)
+
+    for room in rooms:
+        room.adj.difference_update(outRooms)
 
     return inRooms, outRooms
 
 def roomAdd(rooms):
     # adds walls between every room
+<<<<<<< HEAD
+    outWalls = set() # a set of all the walls on the ouside of the house
+    avalableWalls = set() # a set of all the walls not including the corner blocks
+    # iterates through the room list making a door between each adjacent room
+=======
     outWalls = set()
-    avalableWalls = set()
+>>>>>>> parent of 5153dd4 (stairs)
     for room in rooms:
+        room.wallsOut = room.walls.copy()
         for adj in room.adj:
             if adj in rooms:
                 door = list(room.wallsEx.intersection(adj.wallsEx))[0]
+                # seting the side of the room the door is on
                 if door[0] == room.x1:
                     door = door + tuple('x1')
                 elif door[0] == room.x2:
@@ -168,14 +180,33 @@ def roomAdd(rooms):
 
                 room.doors.append(door)
 
-        outWalls.symmetric_difference_update(room.walls)
+<<<<<<< HEAD
+            # out walls
+            # room.wallsOut.difference_update(adj.walls)
+
+
+        print(room)
+        print(room.adj)
+        print(room.doors)
+        print()
+        print(len(room.adj) - len(room.doors))
+        print()
+        outWalls.update(room.wallsOut)
         avalableWalls.update(room.wallsEx)
 
+    # making the front door out of one of the external walls that is not a corner
     outWalls.intersection_update(avalableWalls)
+=======
+        outWalls.symmetric_difference_update(room.walls)
+
+>>>>>>> parent of 5153dd4 (stairs)
     fDoor = random.choice(list(outWalls))
+    outWalls.remove(fDoor)
 
     for room in rooms:
-        if fDoor in list(room.walls):
+        # if the door is a part of a room it will be added to the room
+        if fDoor in list(room.wallsOut):
+            # seting the side of the room the door is on
             if fDoor[0] == room.x1:
                 fDoor = fDoor + tuple('x1')
             elif fDoor[0] == room.x2:
@@ -185,9 +216,25 @@ def roomAdd(rooms):
             elif fDoor[1] == room.z2:
                 fDoor = fDoor + tuple('z2')
 
+<<<<<<< HEAD
+            # seting the room type
             fDoor = fDoor + tuple('F')
+=======
+>>>>>>> parent of 5153dd4 (stairs)
             room.doors.append(fDoor)
             room.decor = 'front'
+
+    windows = outWalls
+    # makes a master list of al the windows in the house by randomly picking from the avalable blocks
+    # for i in range(0, int(len(outWalls)/1.2)):
+    #     windows.add(random.choice(list(outWalls)))
+
+    # checks if the window is a part of the room and if so adds it
+    for window in list(windows):
+        for room in rooms:
+            if window in list(room.walls):
+                room.windows.append(window)
+
     return rooms
 
 def roomMitosis(room):
@@ -255,80 +302,108 @@ class House:
         self.foundatonBlocks = []
         self.length = length
         self.width = width
-        self.stories = 3#random.randint(1, 3)
+<<<<<<< HEAD
+        self.stories = random.randint(1, 3) # how many levels of the hopuse there are
+=======
+>>>>>>> parent of 5153dd4 (stairs)
 
-        self.palette = Palettes.housePalette()
-        self.palette.pickPalette()
+        self.palette = Palettes.housePalette() # the block palet of the hous
+        self.palette.pickPalette() # the block palet of the house
 
-        self.inRooms = []
-        self.outRooms = []
+        self.inRooms = [] # rooms inside the house
+        self.outRooms = [] # rooms outside the house
 
 
     #generate floorplan
     def generateRooms(self):
+<<<<<<< HEAD
+        # based on the number of sroies it makes the rooms
         for i in range(0, self.stories):
+            # recursivly makes a list of rooms
             rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+(4*i), [], None))
+=======
+        rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y, [], None))
 
+        rooms = roomAdjinator(rooms)
+
+        self.inRooms, self.outRooms = roomCull(rooms)
+
+        self.inRooms = roomAdd(self.inRooms)
+
+        if random.randint(0,2) == 1:
+            rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+4, [], None))
+>>>>>>> parent of 5153dd4 (stairs)
+
+            # creates the adjacencies for each room
             rooms = roomAdjinator(rooms)
 
+            # splits the rooms into rooms that are going to be biuld and ones that are not
             inRooms, outRooms = roomCull(rooms)
 
+            # adds doors to the rooms
             inRooms = roomAdd(inRooms)
-            if i != 0:
-                inRooms[0].decor = 'STAIRS'
 
+<<<<<<< HEAD
+            # appends the new rooms to the master room list
             for room in inRooms:
                 self.inRooms.append(room)
+                # removes exces front doors
                 if i != 0:
                     for door in room.doors:
                         if len(door) == 4:
                             room.doors.remove(door)
                             room.decor = None
+=======
+            for i in inRooms:
+                self.inRooms.append(i)
+>>>>>>> parent of 5153dd4 (stairs)
 
 
 
     def build(self, mc):
 
+<<<<<<< HEAD
+        # biulds the roof blocks first
         for room in self.inRooms:
             for i in range(room.x1, room.x2+1):
                 mc.setBlocks(i, room.y + 4 , room.z1, i, room.y + 4 + int((i-room.x1)/2+1), room.z2, self.palette.roof)
 
+        # places the rooms in reverse order
         for room in reversed(self.inRooms):
+            # clears the area of the room
+=======
+        for room in reversed(self.inRooms):
+
+>>>>>>> parent of 5153dd4 (stairs)
             mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z2, 0)
 
+            # places the 4 walls
             mc.setBlocks(room.x1, room.y, room.z1, room.x1, room.y +3, room.z2, self.palette.walls)
             mc.setBlocks(room.x2, room.y, room.z1, room.x2, room.y +3, room.z2, self.palette.walls)
             mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y +3, room.z1, self.palette.walls)
             mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, self.palette.walls)
 
+            # places the floor and ceiling
             mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, self.palette.floor)
             mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
 
+            # places the 4 corner pilars
             mc.setBlocks(room.x1, self.y-10, room.z1, room.x1, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x1, self.y-10, room.z2, room.x1, room.y +4, room.z2, self.palette.trim)
             mc.setBlocks(room.x2, self.y-10, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x2, self.y-10, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
 
-        # doors
         for room in self.inRooms:
+
+            for window in room.windows:
+                mc.setBlocks(window[0], room.y+2, window[1], window[0], room.y+3, window[1], block.GLASS)
+
             for door in room.doors:
                 mc.setBlock(door[0], room.y +2, door[1], door[0], room.y +1, door[1], 0)
 
                 mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))
                 mc.setBlock(door[0], room.y+1, door[1], block.DOOR_WOOD.withData(0))
-
-        # stairs
-        room1 = self.inRooms[0]
-        for i in range(0, self.stories-1):
-            print('st')
-            mc.setBlocks(room1.x1+2, room1.y+4 +(i*4), room1.z1+2, room1.x1+3, room1.y+4+(i*4), room1.z1+3, 0)
-            mc.setBlock(room1.x1+2, room1.y+1+(i*4), room1.z1+2, block.STAIRS_WOOD.withData(3))
-            mc.setBlock(room1.x1+3, room1.y+2+(i*4), room1.z1+2, block.STAIRS_WOOD.withData(0))
-            mc.setBlock(room1.x1+3, room1.y+3+(i*4), room1.z1+3, block.STAIRS_WOOD.withData(2))
-            mc.setBlock(room1.x1+2, room1.y+4+(i*4), room1.z1+3, block.STAIRS_WOOD.withData(1))
-
-
-
+            # input()
 
 
     def decorate(self,mc):

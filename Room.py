@@ -9,10 +9,12 @@ class Room:
 
 
         self.doors = doors
+        self.windows = []
         self.decor = decor
 
         self.walls = set()
         self.wallsEx = set()
+        self.wallsOut = set()
         self.adj = set()
 
     def __str__(self):
