@@ -17,9 +17,17 @@ except ImportError:
     import Queue as queue
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
+    
+    # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
+    # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
+    # north, east, south and west each store block data for that direction on the layer, each block having x, y, z data
+    # n, e, s, w avg stores the average height for that cardinal direction
+    # n, e, s, w blocks stores each block in order for that layer to be placed later
         
     class Layer():
         def __init__(self):
+            self.avgHeight = 0
+            
             self.north = []
             self.east = []
             self.south = []
@@ -125,7 +133,18 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
                 
             elif direction == 3:
                 self.west = []
-                
+            
+        def setAvgHeight(self):
+            self.avgHeight = round((self.northAvg + self.eastAvg + self.southAvg + self.westAvg)/4)
+            
+        def getAvgHeight(self):
+            return self.avgHeight
+    
+    # Below class is just for the foundation, as it doesn't need to store individual cartisional directions
+    # Coords stores the coords of the blocks to be placed
+    # Average heights stores the average height of the foundation
+    # Blocks stores the actual blocks used by the foundation
+    
     class Foundation():
         def __init__(self):
             self.coords = []
@@ -481,48 +500,16 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     # Should scan through each coord in each layer reference, placing that spesific block in the spesific location
     # Should also scan for if the block above the block is solid, and if so replace it with air
 
-    def isAirAbove(coord):
-        if mc.getBlock(coord.x, coord.y + 1, coord .z) == 0:
-            return True
-        else:
-            return False
+    def placeBlock(startCoord, endCoord, height, blockId, data):
+        startX = startCoord.x
+        startY = height
+        startZ = startCoord.z
         
-    def fillAirAbove(coord):
-        if isAirAbove(coord) == False:
-            mc.setBlock(coord.x, coord.y + 1, coord.z, 0)
-            fillAirAbove(Vector(coord.x, coord.y + 1, coord.z))
-            
-        else:
-            return 0
+        endX = endCoord.x
+        endZ = endCoord.z
         
-    def isAirBelow(coord):
-        if mc.getBlock(coord.x, coord.y - 1, coord.z) == 0:
-            return True
-        else:
-            return False
-        
-    def fillAirBelow(coord, blockId, data):
-        if isAirBelow(coord):
-            mc.setBlock(coord.x, coord.y - 1, coord.z, blockId, data)
-            fillAirBelow(Vector(coord.x, coord.y - 1, coord.z), blockId, data)
-            
-        else:
-            return 0
-
-    def placeBlock(coord, blockId, data, fillBelow):
-        x = coord.x
-        y = coord.y
-        z = coord.z
-        
-        if fillBelow:
-            mc.setBlock(x, y, z, blockId, data)
-            fillAirAbove(coord)
-            fillAirBelow(coord, blockId, data)
-            
-        else:
-            if isAirBelow(coord) == False:
-                mc.setBlock(x, y, z, blockId, data)
-                fillAirAbove(coord) 
+        mc.setBlocks(startX, startY, startZ, endX, startY - 1000, endZ, blockId, data)
+        mc.setBlocks(startX, startY + 1, startZ, endX, startY + 1000, endZ, 0)
                 
         
     def placeFoundation(layer):
@@ -538,23 +525,24 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
             for direction in range(4):
                 coords = layer.getCardinal(direction)
                 blocks = layer.getBlocksCardinal(direction)
-                for index in range(len(coords)):
-                    coord = coords[index]
-                    block = blocks[index]
-                    placeBlock(coord, block.id, block.data, False)
+                startCoord = coords[0]
+                endCoord = coords[len(coords)-1]
+                block = blocks[0]
+                height = layer.getAvgHeight()
+                placeBlock(startCoord, endCoord, height, block.id, block.data)
                     
         elif layered == False:
             coords = layer.getCoords()
             blocks = layer.getBlocks()
-            for index in range(len(coords)):
-                coord = coords[index]
-                block = blocks[index]
-                placeBlock(coord, block.id, block.data, True)
+            startCoord = coords[0]
+            endCoord = coords[len(coords)-1]
+            block = blocks[0]
+            placeBlock(startCoord, endCoord, coords[0].y, block.id, block.data)
 
 
     layers = []
 
-    numLayers = 10
+    numLayers = 3
 
     for i in range(numLayers):
         layers += [Layer(), ]
@@ -563,43 +551,18 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
 
     mc = Minecraft.create()
 
-    print("World created!")
-    mc.postToChat("World created!")
-
     anchor = mc.player.getTilePos()
-
-    print("Anchor stored")
-    mc.postToChat("Anchor stored")
-
-    print("Size of the house's X is:" + str(sizeHouseX))
-    mc.postToChat("Size of the house's X is:" + str(sizeHouseX))
-    print("Size of the house's Z is:" + str(sizeHouseZ))
-    mc.postToChat("Size of the house's Z is:" + str(sizeHouseZ))
 
     sizeX = sizeHouseX + (len(layers) - 1) * 2
     sizeZ = sizeHouseZ + (len(layers) - 1) * 2
 
-    print("Size of the overall X is:" + str(sizeX))
-    mc.postToChat("Size of the overall X is:" + str(sizeX))
-    print("Size of the overall Z is:" + str(sizeZ))
-    mc.postToChat("Size of the overall Z is:" + str(sizeZ))
-
     startX = anchorX
     endX = anchorX + sizeX - 1
-
-    print("Start X is: " + str(startX) + "\nEnd X is: " + str(endX))
-    mc.postToChat("Start X is: " + str(startX) + "\nEnd X is: " + str(endX))
 
     startZ = anchorZ
     endZ = anchorZ + sizeZ - 1
 
-    print("Start Z is: " + str(startZ) + "\nEnd Z is: " + str(endZ))
-    mc.postToChat("Start Z is: " + str(startZ) + "\nEnd Z is: " + str(endZ))
-
     scannedArea = scanArea(startX, startZ, endX, endZ, sizeX, sizeZ)
-
-    print("Area scanned!")
-    mc.postToChat("Area scanned!")
 
     for layerIndex in range(len(layers)-1):
         stripLayer(scannedArea, layers[layerIndex])
@@ -612,29 +575,18 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     for row in range(colLen):
         for coord in range(rowLen):
             temp = scannedArea[0].pop(0)
-            foundation.addBlock(block.BEDROCK)
-            #foundationBlocks += [mc.getBlockWithData(temp), ]
+            foundation.addBlock(mc.getBlockWithData(temp))
             foundation.addCoord(temp)
             
         scannedArea.pop(0)
-        
-    print("Layers stripped!")
-    mc.postToChat("Layers stripped!")
 
     for layerIndex in range(len(layers) - 1):
         averageHeight(layers[layerIndex])
+        layers[layerIndex].setAvgHeight()
 
     averageHeightFoundation(foundation)
 
-    print("Average heights found!")
-    mc.postToChat("Average heights found!")
-
-    for layerIndex in range(len(layers) - 1):
-        placeFoundation(layers[layerIndex])
-
-    placeFoundation(foundation)
-
-    print("Foundation placed, all done!")
-    mc.postToChat("Foundation placed, all done!")
+    for layerIndex in layers:
+        placeFoundation(layerIndex)
     
     return foundation.getCoords(), foundation.getBlocks()
