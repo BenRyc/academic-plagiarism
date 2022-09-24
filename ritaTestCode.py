@@ -11,12 +11,11 @@ playerPos = mc.player.getPos()
 x,y,z = int(playerPos.x), int(playerPos.y), int(playerPos.z)
 
 
-random.seed(1)
-testHouse = House.House(x,y,z, 20,20)
+print(mc.getBlockWithData(x,y-1,z))
+# random.seed(1)
+# mc.setBlock(x,y,z,26,4,3)
 
-testHouse.generateRooms()
-testHouse.build(mc)
-testHouse.decorate
+mc.setBlocks(x,y,z,x,y+3,z,47)
 
 
 

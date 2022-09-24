@@ -19,6 +19,13 @@ TRIM:
 (17,1) log spruce
 (162,1) log dark oak
 
+FLOOR:
+(5,3) planks dark oak
+(5,2) planks jungle
+(5,0) planks birch
+(5,1) planks oak
+
+
 (171.1.4) carpet red
 '''
 class housePalette():
@@ -35,10 +42,10 @@ class housePalette():
         
     def pickPalette(self):
         trimOptions = [[17,0], [17,1], [162,1]]
-        floorOptions = [block.WOOD, block.STONE]
+        floorOptions = [[5,3], [5,2], [5,0], [5,1]]
         wallOptions = [[159, 1], [159,3], [159,4],[159,5],[159,6],[159,9],[159,14]]
-        ceilingOptions = [block.WOOD, block.STONE]
-        roofOptions = [block.WOOD, block.STONE]
+        ceilingOptions = [[5,3], [5,2], [5,0], [5,1]]
+        roofOptions = [[5,3], [5,2], [5,0], [5,1]]
 
         #randomised palette
         self.trim = random.choice(trimOptions)
