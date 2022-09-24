@@ -131,20 +131,20 @@ def roomCull(rooms):
     for room in inRooms:
         room.adj.difference_update(outRooms)
 
+    for room in inRooms:
+        room.wallsOut = room.walls.copy()
+        for adj in room.adj:
+            room.wallsOut.difference_update(adj.walls)
+
     return inRooms, outRooms
 
 def roomAdd(rooms):
     # adds walls between every room
-    outWalls = set() # a set of all the walls on the ouside of the house
-    avalableWalls = set() # a set of all the walls not including the corner blocks
+
     # iterates through the room list making a door between each adjacent room
 
-    outWalls = set()
     for room in rooms:
-        room.wallsOut = room.walls.copy()
-        print(room)
-        print(room.adj)
-        print(room.doors)
+
         for adj in range(len(list(room.adj))):
             door = list(room.wallsEx.intersection(list(room.adj)[adj].wallsEx))[0]
             # seting the side of the room the door is on
@@ -294,8 +294,6 @@ class House:
             # splits the rooms into rooms that are going to be biuld and ones that are not
             inRooms, outRooms = roomCull(rooms)
 
-            # adds doors to the rooms
-            inRooms = roomAdd(inRooms)
             # appends the new rooms to the master room list
             for room in inRooms:
                 self.inRooms.append(room)
@@ -305,8 +303,41 @@ class House:
                         if len(door) == 4:
                             room.doors.remove(door)
                             room.decor = None
+            if i == 0:
+                outWalls = set() # a set of all the walls on the ouside of the house
+                avalableWalls = set() # a set of all the walls not including the corner blocks
+                for room in inRooms:
+                    outWalls.update(room.wallsOut)
+                    avalableWalls.update(room.wallsEx)
 
+                # making the front door out of one of the external walls that is not a corner
+                outWalls.intersection_update(avalableWalls)
+                fDoor = random.choice(list(outWalls))
 
+                for room in rooms:
+                    # if the door is a part of a room it will be added to the room
+                    if fDoor in list(room.wallsOut):
+                        # seting the side of the room the door is on
+                        if fDoor[0] == room.x1:
+                            fDoor = fDoor + tuple('x1')
+                        elif fDoor[0] == room.x2:
+                            fDoor = fDoor + tuple('x2')
+                        elif fDoor[1] == room.z1:
+                            fDoor = fDoor + tuple('z1')
+                        elif fDoor[1] == room.z2:
+                            fDoor = fDoor + tuple('z2')
+
+                        # seting the room type
+                        fDoor = fDoor + tuple('F')
+                        room.doors.append(fDoor)
+                        room.decor = 'front'
+
+                # making the front door out of one of the external walls that is not a corner
+                outWalls.intersection_update(avalableWalls)
+                fDoor = random.choice(list(outWalls))
+
+        # adds doors to the rooms
+        self.inRooms = roomAdd(self.inRooms)
 
     def build(self, mc):
 
@@ -336,12 +367,14 @@ class House:
             mc.setBlocks(room.x2, self.y-10, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x2, self.y-10, room.z2, room.x2, room.y +4, room.z2, self.palette.trim)
 
+
         for room in self.inRooms:
 
-            for window in room.windows:
-                mc.setBlocks(window[0], room.y+2, window[1], window[0], room.y+3, window[1], 95, 8)
+            for window in list(room.wallsOut.intersection(room.wallsEx)):
+                mc.setBlocks(window[0], room.y+2, window[1], window[0], room.y+3, window[1], block.GLASS)
 
             for door in room.doors:
+                print(door)
                 mc.setBlock(door[0], room.y +2, door[1], door[0], room.y +1, door[1], 0)
 
                 mc.setBlock(door[0], room.y +2, door[1], block.DOOR_WOOD.withData(9))

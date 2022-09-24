@@ -18,8 +18,11 @@ except ImportError:
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     
-    print(f"start off the house is {anchorX}, {anchorZ}")
-    print(f'end of the house should be {anchorX + sizeHouseX}, {anchorZ + sizeHouseZ}')
+    # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
+    # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
+    # north, east, south and west each store block data for that direction on the layer, each block having x, y, z data
+    # n, e, s, w avg stores the average height for that cardinal direction
+    # n, e, s, w blocks stores each block in order for that layer to be placed later
         
     class Layer():
         def __init__(self):
@@ -136,7 +139,12 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
             
         def getAvgHeight(self):
             return self.avgHeight
-                
+    
+    # Below class is just for the foundation, as it doesn't need to store individual cartisional directions
+    # Coords stores the coords of the blocks to be placed
+    # Average heights stores the average height of the foundation
+    # Blocks stores the actual blocks used by the foundation
+    
     class Foundation():
         def __init__(self):
             self.coords = []
@@ -534,7 +542,7 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
 
     layers = []
 
-    numLayers = 10
+    numLayers = 3
 
     for i in range(numLayers):
         layers += [Layer(), ]
@@ -543,43 +551,18 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
 
     mc = Minecraft.create()
 
-    print("World created!")
-    mc.postToChat("World created!")
-
     anchor = mc.player.getTilePos()
-
-    print("Anchor stored")
-    mc.postToChat("Anchor stored")
-
-    print("Size of the house's X is:" + str(sizeHouseX))
-    mc.postToChat("Size of the house's X is:" + str(sizeHouseX))
-    print("Size of the house's Z is:" + str(sizeHouseZ))
-    mc.postToChat("Size of the house's Z is:" + str(sizeHouseZ))
 
     sizeX = sizeHouseX + (len(layers) - 1) * 2
     sizeZ = sizeHouseZ + (len(layers) - 1) * 2
 
-    print("Size of the overall X is:" + str(sizeX))
-    mc.postToChat("Size of the overall X is:" + str(sizeX))
-    print("Size of the overall Z is:" + str(sizeZ))
-    mc.postToChat("Size of the overall Z is:" + str(sizeZ))
-
     startX = anchorX
     endX = anchorX + sizeX - 1
-
-    print("Start X is: " + str(startX) + "\nEnd X is: " + str(endX))
-    mc.postToChat("Start X is: " + str(startX) + "\nEnd X is: " + str(endX))
 
     startZ = anchorZ
     endZ = anchorZ + sizeZ - 1
 
-    print("Start Z is: " + str(startZ) + "\nEnd Z is: " + str(endZ))
-    mc.postToChat("Start Z is: " + str(startZ) + "\nEnd Z is: " + str(endZ))
-
     scannedArea = scanArea(startX, startZ, endX, endZ, sizeX, sizeZ)
-
-    print("Area scanned!")
-    mc.postToChat("Area scanned!")
 
     for layerIndex in range(len(layers)-1):
         stripLayer(scannedArea, layers[layerIndex])
@@ -592,30 +575,18 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     for row in range(colLen):
         for coord in range(rowLen):
             temp = scannedArea[0].pop(0)
-            foundation.addBlock(block.BEDROCK)
-            #foundationBlocks += [mc.getBlockWithData(temp), ]
+            foundation.addBlock(mc.getBlockWithData(temp))
             foundation.addCoord(temp)
             
         scannedArea.pop(0)
-        
-    print("Layers stripped!")
-    mc.postToChat("Layers stripped!")
 
     for layerIndex in range(len(layers) - 1):
         averageHeight(layers[layerIndex])
         layers[layerIndex].setAvgHeight()
 
     averageHeightFoundation(foundation)
-    
-    
-
-    print("Average heights found!")
-    mc.postToChat("Average heights found!")
 
     for layerIndex in layers:
         placeFoundation(layerIndex)
-
-    print("Foundation placed, all done!")
-    mc.postToChat("Foundation placed, all done!")
     
     return foundation.getCoords(), foundation.getBlocks()
