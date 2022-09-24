@@ -25,9 +25,6 @@ if __name__ == '__main__':
     scanDiameter = 13 #increases after every house placement
     minDistance = 4
     
-    #TODO DELETE THIS
-    numHouses = 2
-    
     for i in range(numHouses):
         
         #randomise size
@@ -84,7 +81,7 @@ if __name__ == '__main__':
     print("Generating terrain")
     
     for house in houseList:
-        house.foundation, house.foundationBlocks = Terraforming.terraform(house.x+house.length, house.z+house.width, length, width)
+        house.foundation, house.foundationBlocks = Terraforming.terraform(house.x, house.z, length, width)
         house.y = house.foundation[0][1]
         
     #TODO DELETE PRINT
