@@ -367,6 +367,16 @@ class House:
                 mc.setBlock(door[0], room.y+1, door[1], block.DOOR_WOOD.withData(0))
             # input()
 
+        # stairs
+        room1 = self.inRooms[0]
+        for i in range(0, self.stories-1):
+            print('st')
+            mc.setBlocks(room1.x1+2, room1.y+4 +(i*4), room1.z1+2, room1.x1+3, room1.y+4+(i*4), room1.z1+3, 0)
+            mc.setBlock(room1.x1+2, room1.y+1+(i*4), room1.z1+2, block.STAIRS_WOOD.withData(3))
+            mc.setBlock(room1.x1+3, room1.y+2+(i*4), room1.z1+2, block.STAIRS_WOOD.withData(0))
+            mc.setBlock(room1.x1+3, room1.y+3+(i*4), room1.z1+3, block.STAIRS_WOOD.withData(2))
+            mc.setBlock(room1.x1+2, room1.y+4+(i*4), room1.z1+3, block.STAIRS_WOOD.withData(1))
+
 
     def decorate(self,mc):
         pass
