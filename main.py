@@ -37,6 +37,8 @@ if __name__ == '__main__':
         
         while posFound == False:
             loopIter += 1
+            if loopIter > 5:
+                scanDiameter +=5
             #new house position
             chosenX = x + random.randint(-scanDiameter,scanDiameter)
             chosenZ = z + random.randint(-scanDiameter,scanDiameter)
@@ -83,3 +85,4 @@ if __name__ == '__main__':
     for house in houseList:
         house.generateRooms()
         house.build(mc)
+    print('village generated!')
