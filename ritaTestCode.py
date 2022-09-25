@@ -11,11 +11,14 @@ playerPos = mc.player.getPos()
 x,y,z = int(playerPos.x), int(playerPos.y), int(playerPos.z)
 
 
-print(mc.getBlockWithData(x,y-1,z))
+print(mc.getBlockWithData(x+1,y,z))
+
+for i in range(13):
+
+    mc.setBlock(x, y, z+i, block.BED.withData(i))
 # random.seed(1)
 # mc.setBlock(x,y,z,26,4,3)
 
-mc.setBlocks(x,y,z,x,y+3,z,47)
 
 
 
