@@ -98,7 +98,7 @@ def decorLiving(mc, room):
     pass
 
 
-def roomAdjinator(rooms):
+def addAdjRooms(rooms):
 
     # wall adding
 
@@ -290,7 +290,7 @@ class House:
             # recursivly makes a list of rooms
             rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+(4*i), [], None))
             # creates the adjacencies for each room
-            rooms = roomAdjinator(rooms)
+            rooms = addAdjRooms(rooms)
 
             # splits the rooms into rooms that are going to be biuld and ones that are not
             inRooms, outRooms = roomCull(rooms)
