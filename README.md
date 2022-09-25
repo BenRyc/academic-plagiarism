@@ -15,6 +15,7 @@ contribution:
 - Terraforming.py
 - Main.py
 - Video Script
+25%
 
 Chris Lamb
 Student ID: s3945643
@@ -22,8 +23,10 @@ Github Username: ChristopherJordanLamb
 ----------------------
 contribution:
 - Pathfinding2D.py
+- little bit of house.py
+- little bit of terraforming.py
 - Main.py
-
+25%
 
 Rita Lam Cordeiro
 Student ID: s3947881
@@ -36,7 +39,7 @@ contribution:
 - Palettes.py
 - Interior Decoration
 - Village Layout Algorithm
-
+25%
 
 Benjamin Rycroft
 Student ID: s3947135
@@ -53,3 +56,4 @@ contibution:
 - Video Fillming
 - Video Editing
 - Video Script
+25%
