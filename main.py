@@ -8,6 +8,7 @@ import random
 import House
 import Terraforming
 import pathfinding2D
+import time
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
     mc = minecraft.Minecraft.create()
@@ -20,7 +21,7 @@ if __name__ == '__main__':
     ########################################################################
 
     houseList = []
-    numHouses = 5
+    numHouses = 6
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
     minDistance = 10
@@ -83,6 +84,7 @@ if __name__ == '__main__':
     ########################################################################
     #                           GENERATE HOUSES                            #
     ########################################################################
+    time.sleep(5)
     fdoors = []
     houselocs = []
     for house in houseList:
