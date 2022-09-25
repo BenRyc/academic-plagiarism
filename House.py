@@ -5,8 +5,9 @@ import Palettes
 from Room import Room
 
 random.seed(1) #TODO delete
-def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z], door object)
-    # ID key
+def decorBedroom(room, dirWithDoor): 
+    # --Block key--
+    # chest
     # bed: 26,
     #         1 -x
     #         2 -z
@@ -15,8 +16,17 @@ def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z]
     # bookshelf: 47
     # crafting table: 58
     # wood stairs: 53
+    # slabs
+    # glowstone: 89
+    # red carpet: 171,1,4
     
     print('decorating bedroom')
+
+    #floor lighting
+    mc.setBlocks(room.x1+3, room.y, room.z+3, room.x1-3, room.y, room.z2-3, 89) 
+    mc.setBlocks(room.x1+3, room.y+1, room.z+3, room.x1-3, room.y+1, room.z2-3, 171,1,4) 
+
+    #directionally dependent decorations
     if '-z' in dirWithDoor: #-z
         #bed
         mc.setBlock(room.x1 + (room.x2-room.x1)//2, room.y+1, room.z2-1,26,4)
@@ -24,6 +34,8 @@ def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z]
         mc.setBlock(room.x1 + (room.x2-room.x1)//2+1, room.y+1, room.z2-1,26,4)
         mc.setBlock(room.x1 + (room.x2-room.x1)//2+1, room.y+1, room.z2-2,26,4)
         #bookshelf
+        mc.setBlocks(room.x1+1, room.y+1, room.z1+1, room.x1+1, room.y+2, room.z1+1, 47)
+        mc.setBlocks(room.x1+1, room.y+3, room.z1+1, room.x1+1, room.y+3, room.z2-1, 47)
 
     elif '+z' in dirWithDoor:
         #bed
@@ -31,6 +43,9 @@ def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z]
         mc.setBlock(room.x1 + (room.x2-room.x1)//2, room.y+1, room.z1+2,26,2)
         mc.setBlock(room.x1 + (room.x2-room.x1)//2+1, room.y+1, room.z1+1,26,2)
         mc.setBlock(room.x1 + (room.x2-room.x1)//2+1, room.y+1, room.z1+2,26,2)
+        #bookshelf
+        mc.setBlocks(room.x2-1, room.y+1, room.z2-1, room.x2-1, room.y+2, room.z2-1, 47)
+        mc.setBlocks(room.x2-1, room.y+3, room.z2-1, room.x2-1, room.y+3, room.z1+1, 47)
 
     elif '+x' in dirWithDoor:
         #bed
@@ -38,14 +53,19 @@ def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z]
         mc.setBlock(room.x1+2, room.y+1, room.z1 + (room.z2-room.z1)//2,26,1)
         mc.setBlock(room.x1+1, room.y+1, room.z1 + (room.z2-room.z1)//2+1,26,1)
         mc.setBlock(room.x1+2, room.y+1, room.z1 + (room.z2-room.z1)//2+1,26,1)
-
+        #bookshelf
+        mc.setBlocks(room.x2-1, room.y+1, room.z1+1,room.x2-1, room.y+2, room.z1+1, 47)
+        mc.setBlocks(room.x2-1, room.y+3, room.z1+1, room.x1+1, room.y+3, room.z1+1, 47)
     elif '-x' in dirWithDoor:
         #bed
         mc.setBlock(room.x2-1, room.y+1, room.z1 + (room.z2-room.z1)//2,26,3)
         mc.setBlock(room.x2-2, room.y+1, room.z1 + (room.z2-room.z1)//2,26,3)
         mc.setBlock(room.x2-1, room.y+1, room.z1 + (room.z2-room.z1)//2+1,26,3)
         mc.setBlock(room.x2-2, room.y+1, room.z1 + (room.z2-room.z1)//2+1,26,3)
-        
+        #bookshelf
+        mc.setBlocks(room.x1+1, room.y+1, room.z2-1, room.x1+1, room.y+2, room.z2-1, 47)
+        mc.setblocks(room.x1+1, room.y+3, room.z2-1, room.x2-1, room.y+3, room.z2-1, 47)
+    
 
 def decorkitchen(self, coor1, coor2, dirWithDoor):
     pass
