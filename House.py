@@ -14,14 +14,15 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
     # bookshelf: 47
     # crafting table: 58
     # wood stairs: 53
-    # slabs
+    # slabs: 126,8
     # glowstone: 89
     # red carpet: 171,1,4
 
+    colour = random.randint(0,16)
 
     #floor lighting
     mc.setBlocks(room.x1+3, room.y, room.z1+3, room.x2-3, room.y, room.z2-3, 89)
-    mc.setBlocks(room.x1+3, room.y+1, room.z1+3, room.x2-3, room.y+1, room.z2-3, 171,14)
+    mc.setBlocks(room.x1+3, room.y+1, room.z1+3, room.x2-3, room.y+1, room.z2-3, 171,colour)
 
     #directionally dependent decorations
     if '-z' in dirWithDoor: #-z
@@ -83,9 +84,17 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         #chest
         mc.setBlock(room.x2-1, room.y+1, room.z1+1, 54, 4)
 
-def decorDining(self, coor1, coor2, dirWithDoor):
-    pass
-def decorLiving(self, coor1, coor2, dirWithDoor):
+def decorDining(mc, room):
+    # sone slabs: 126,8
+    # oak block
+    middleX = room.x1 + (room.x2-room.x1)//2
+    middleZ = room.z1 + (room.z2-room.z1)//2
+
+    #place table
+    mc.setBlocks(middleX-1, room.y+1, middleZ-1, middleX+1, room.y+1, middleZ+1, block.STONE_SLAB.withData(8))
+    mc.setBlocks(middleX-1, room.y, middleZ-1, middleX+1, room.y, middleZ+1, 89)
+    mc.setBlock(middleX, room.y+1, middleZ, 1)
+def decorLiving(mc, room):
     pass
 
 
@@ -405,8 +414,9 @@ class House:
 
             #determine what decoration type/s are appropriate
             if not isStairRoom and len(dirWithDoor) == 1:
-
                 decorBedroom(mc, room, dirWithDoor)
+            elif not isStairRoom:
+                decorDining(mc, room)
 
 
 
