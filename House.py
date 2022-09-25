@@ -325,7 +325,12 @@ class House:
 
                 # making the front door out of one of the external walls that is not a corner
                 outWalls.intersection_update(avalableWalls)
-                fDoor = random.choice(list(outWalls))
+                choiceli = []
+                for wall in list(outWalls):
+                    if wall[0] == self.x or wall[1] == self.z:
+                        choiceli.append(wall)
+
+                fDoor = random.choice(choiceli)
 
                 for room in rooms:
                     # if the door is a part of a room it will be added to the room
