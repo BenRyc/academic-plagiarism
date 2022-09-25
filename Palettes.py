@@ -26,7 +26,7 @@ FLOOR:
 (5,1) planks oak
 
 
-(171.1.4) carpet red
+(171,14) carpet red
 '''
 class housePalette():
     def __init__(self, trim=None, floor=None, walls=None, ceiling=None, roof=None):
