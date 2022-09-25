@@ -18,6 +18,8 @@ except ImportError:
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     
+    blocksAvoid
+    
     # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
     # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
     # north, east, south and west each store block data for that direction on the layer, each block having x, y, z data
@@ -508,7 +510,7 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
         endX = endCoord.x
         endZ = endCoord.z
         
-        mc.setBlocks(startX, startY, startZ, endX, startY - 1000, endZ, blockId, data)
+        mc.setBlocks(startX, startY, startZ, endX, startY - 10, endZ, blockId, data)
         mc.setBlocks(startX, startY + 1, startZ, endX, startY + 1000, endZ, 0)
                 
         
