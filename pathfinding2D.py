@@ -309,8 +309,17 @@ def astar(maze, start, end):
                 multi = 10
             if child.h < 30:
                 multi = 0
+            if child.h < 10:
+                multi = 0
+                child.p = 0
+            if child.g<5:
+                multi = 2
             else:
-                child.p = math.log(abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))+1,math.e)*multi
+                if maze[child.position[0]][child.position[1]] == 1000:
+                    child.p = 5*multi
+                else:
+                    child.p = math.log(abs((maze[child.position[0]][child.position[1]])-(maze[CurrentNode.position[0]][CurrentNode.position[1]]))+1,math.e)*multi
+                print(child.p)
             #print(CurrentNode.p)
             #print(CurrentNode.p)
 
@@ -471,9 +480,12 @@ def main(fdoors, houselocs):
         
         Path = astar(maze, s, e)
         #print(Path)
+        startbloc = True
         for i in Path:
-
-
+            if startbloc ==True:
+                startbloc = False
+                continue
+            
             #print(translated[0])
             #print("translation")
             #print(translated[0])
@@ -488,7 +500,7 @@ def main(fdoors, houselocs):
             #print(z)
             y = mc.getHeight(x,z)
             #print(x,z)
-            mc.setBlock(x,y,z,216)
+            mc.setBlock(x,y,z,4)
             #print(maze)
             print(maze[0][0])
             #print(maze[(445+translated[0])][(74+translated[1])])

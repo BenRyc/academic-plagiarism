@@ -5,9 +5,9 @@
 from mcpi import minecraft
 from mcpi import block
 import random
-import House    
+import House
 import Terraforming
-
+import pathfinding2D
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
     mc = minecraft.Minecraft.create()
@@ -23,18 +23,18 @@ if __name__ == '__main__':
     numHouses = 5
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
-    minDistance = 4
-    
+    minDistance = 10
+
     for i in range(numHouses):
-        
+
         #randomise size
         length = random.randint(13,25) #along x
         width = random.randint(13,25) #along z
 
         #tries a random position until it doesn't overlap with previous houses
         posFound = False
-         
-        loopIter = 0 
+
+        loopIter = 0
         while posFound == False:
             loopIter += 1
             if loopIter > 5:
@@ -46,11 +46,11 @@ if __name__ == '__main__':
             #generates coordinates occuppied by the house (including buffer for minimum distance)
             houseCoor = set()
             for ax in range(chosenX-(minDistance//2), chosenX+width+(minDistance//2)):
-                
+
                 for az in range(chosenZ-(minDistance//2), chosenZ+length+(minDistance//2)):
-                    
+
                     houseCoor.add((ax,az))
-                    
+
             #checks if the house position doesnt't overlap
             if len(houseCoor.intersection(forbiddenCoor)) == 0:
                 for val in houseCoor:
@@ -60,16 +60,16 @@ if __name__ == '__main__':
         #add new house object
         houseList.append(House.House(chosenX, None, chosenZ, length, width))
         scanDiameter = scanDiameter + 5
-    
+
     ########################################################################
     #                           TERRAFORMING                               #
     ########################################################################
-    
+
     for house in houseList:
         house.foundation, house.foundationBlocks = Terraforming.terraform(house.x, house.z, length, width)
         house.y = house.foundation[0][1]
-        
-    
+
+
     for house in houseList:
         x = house.foundation[0][0]
         y = house.foundation[0][1]
@@ -79,23 +79,23 @@ if __name__ == '__main__':
         blockID = house.foundationBlocks.id
         blockData = house.foundationBlocks.data
         mc.setBlocks(x, y, z, endx, y-10, endz, blockID, blockData)
-        
+
     ########################################################################
     #                           GENERATE HOUSES                            #
     ########################################################################
+    fdoors = []
+    houselocs = []
     for house in houseList:
         house.generateRooms()
-    print('village generated!')
-
-    ########################################################################
-    #                     PATHFINDING AND BUILDING                         #
-    ########################################################################
-
-    ########################################################################
-    #                             BUILD HOUSES                             #
-    ########################################################################
-
+        fdoors.append(house.frontdoor)
+        houseloc = []
+        houseloc.append(house.x)
+        houseloc.append(house.z)
+        houseloc.append(house.length)
+        houseloc.append(house.width)
+        houselocs.append(houseloc)
     for house in houseList:
         house.build(mc)
         house.decorate(mc)
-    print('village built!')
+    pathfinding2D.main(fdoors, houselocs)
+    print('village generated!')

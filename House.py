@@ -41,7 +41,7 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
 
         mc.setBlocks(room.x1+2, room.y, room.z1+2, room.x2-2, room.y, room.z2-3, 89)
         mc.setBlocks(room.x1+2, room.y+1, room.z1+2, room.x2-2, room.y+1, room.z2-3, 171,colour)
-        
+
 
     elif '+z' in dirWithDoor:
         #bed
@@ -106,7 +106,7 @@ def decorDining(mc, room):
     mc.setBlocks(middleX-1, room.y, middleZ-1, middleX+1, room.y, middleZ+1, 89)
     mc.setBlock(middleX, room.y+1, middleZ, 1)
 def decorLiving(mc, room):
-    # wool: 35, 
+    # wool: 35,
     mc.setBlocks(room.x1+2, room.y+1, room.z1+3, room.x1+4, room.y+1, room.z1+4, 35, 15)
     mc.setBlock(room.x1+3, room.y+1, room.z1+4, block.STONE_SLAB_DOUBLE)
 
@@ -284,6 +284,7 @@ class House:
         self.foundatonBlocks = []
         self.length = length
         self.width = width
+        self.frontdoor = "None"
 
         self.stories = random.randint(1, 3) # how many levels of the hopuse there are
 
@@ -348,6 +349,7 @@ class House:
                         # seting the room type
                         fDoor = fDoor + tuple('F')
                         room.doors.append(fDoor)
+                        self.frontdoor = fDoor
                         room.decor = 'front'
 
 
@@ -413,7 +415,7 @@ class House:
 
         for room in self.inRooms:
             isStairRoom = False
-            if house.stories != 1 and room.x1 == self.x and room.z1 == self.z:
+            if self.stories != 1 and room.x1 == self.x and room.z1 == self.z:
                 isStairRoom = True
             #determine which directions have doors
             dirWithDoor = []
@@ -434,7 +436,7 @@ class House:
                 decorBedroom(mc, room, dirWithDoor)
             elif not isStairRoom:
                 randChoice = random.randint(0,1)
-                
+
                 if randChoice == 0:
                     decorLiving(mc,room)
                 else:
