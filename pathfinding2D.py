@@ -425,7 +425,9 @@ def main(fdoors, houselocs):
         nrow = []
         #print(h)
         print(bannedlocs)
+        takenspot = False
         for i in h:
+            takenspot = False
             currx = i.x
             #mc.setBlock(i,51)
             if prevx != currx:
@@ -437,6 +439,10 @@ def main(fdoors, houselocs):
                     if j[0] == i.x and j[1] == i.z:
                         nrow.append(1000)
                         print(nrow)
+                        takenspot = True
+                        break
+                if takenspot == True:
+                    continue
                 else:
                     nrow.append(i.y)
             
