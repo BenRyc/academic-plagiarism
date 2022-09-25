@@ -38,7 +38,7 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         mc.setBlocks(room.x1+1, room.y+1, room.z1+2, room.x1+1, room.y+1, room.z2-1, 126,8)
         #chest
         mc.setBlock(room.x2-1, room.y+1, room.z2-1, 54, 2)
-        
+
 
     elif '+z' in dirWithDoor:
         #bed
@@ -313,7 +313,12 @@ class House:
 
                 # making the front door out of one of the external walls that is not a corner
                 outWalls.intersection_update(avalableWalls)
-                fDoor = random.choice(list(outWalls))
+                choiceli = []
+                for wall in list(outWalls):
+                    if wall[0] == self.x or wall[1] == self.z:
+                        choiceli.append(wall)
+
+                fDoor = random.choice(choiceli)
 
                 for room in rooms:
                     # if the door is a part of a room it will be added to the room
