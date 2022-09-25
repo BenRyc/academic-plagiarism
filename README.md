@@ -3,6 +3,11 @@
 --Work distribution--
 
 James: Terraforming
+- JamesLeeRMIT
 Chris: Pathfinding
+- ChristopherJordanLamb
 Rita: Houses
-James: Houses
+- ritacordiero
+Ben: Houses
+- fish4203
+- benryc
