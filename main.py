@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
         #tries a random position until it doesn't overlap with previous houses
         posFound = False
-        
+         
         loopIter = 0 
         while posFound == False:
             loopIter += 1
@@ -71,16 +71,17 @@ if __name__ == '__main__':
         
     
     for house in houseList:
-        for index in range(len(house.foundation)-1):
-            x = house.foundation[index][0]
-            y = house.foundation[index][1]
-            z = house.foundation[index][2]
-            blockID = house.foundationBlocks[index].id
-            blockData = house.foundationBlocks[index].data
-            mc.setBlock(x, y, z, blockID, blockData)
+        x = house.foundation[0][0]
+        y = house.foundation[0][1]
+        z = house.foundation[0][2]
+        endx = house.foundation[len(house.foundation)-1][0]
+        endz = house.foundation[len(house.foundation)-1][2]
+        blockID = house.foundationBlocks.id
+        blockData = house.foundationBlocks.data
+        mc.setBlocks(x, y, z, endx, y-10, endz, blockID, blockData)
         
     ########################################################################
-    #                           GENERATE HOUSE                             #
+    #                           GENERATE HOUSES                            #
     ########################################################################
     fdoors = []
     houselocs = []

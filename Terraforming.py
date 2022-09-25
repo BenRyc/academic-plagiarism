@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from __future__ import unicode_literals
 from mcpi.minecraft import Minecraft
-from mcpi import block
+from mcpi import block as mcpiBlock
     
 import picraft
 from picraft import Vector, X, Y, Z
@@ -18,7 +18,7 @@ except ImportError:
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     
-    blocksAvoid = [8, 9, 10, 11, 18, 31, 32, 37, 38, 39, 40, 78]
+    blocksAvoid = [0, 8, 9, 10, 11, 18, 31, 32, 37, 38, 39, 40, 78]
     
     # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
     # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
@@ -524,26 +524,42 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
             layered = False
             
         if layered:
-            for direction in range(4):
-                coords = layer.getCardinal(direction)
-                blocks = layer.getBlocksCardinal(direction)
-                #fillBlock = getBlockToFill(layer.getBlocksCardinal(direction))
-                startCoord = coords[0]
-                endCoord = coords[len(coords)-1]
-                block = blocks[0]
-                height = layer.getAvgHeight()
-                placeBlock(startCoord, endCoord, height, block.id, block.data)
+            print("aaaaaaAAAAAAAAAAAAAAAA")
+            fillBlock = getBlockToFill(layer.getBlocksCardinal(0))
+            startCoord = layer.getCardinal(0)[0]
+            endCoord = layer.getCardinal(2)[len(layer.getCardinal(2))-1]
+            height = layer.getAvgHeight()
+            placeBlock(startCoord, endCoord, height, fillBlock.id, fillBlock.data)
+            return fillBlock
                     
         elif layered == False:
             coords = layer.getCoords()
-            blocks = layer.getBlocks()
+            print("aaaaaaAAAAAAAAAAAAAAAA")
+            fillBlock = getBlockToFill(layer.getBlocks())
             startCoord = coords[0]
             endCoord = coords[len(coords)-1]
-            block = blocks[0]
-            placeBlock(startCoord, endCoord, coords[0].y, block.id, block.data)
+            placeBlock(startCoord, endCoord, coords[0].y, fillBlock.id, fillBlock.data)
+            return fillBlock
 
-    def getBlockToFill():
-        pass
+    def getBlockToFill(blocks):
+        for blockIndex in blocks:
+            valid = True
+            
+            for scan in blocksAvoid:
+                scannedBlock = blockIndex.id
+                print(scannedBlock)
+                
+                if scannedBlock == scan:
+                    print("Inside if")
+                    valid = False
+                    break
+                    
+            if valid:
+                return blockIndex
+            
+        if valid == False:
+            return mcpiBlock.GRASS
+                    
     
     #TODO for each block in a given gardinal direction, scan a nlacklist and if the block is in a blacklist then go to the next block, default to grass
 
@@ -594,6 +610,6 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     averageHeightFoundation(foundation)
 
     for layerIndex in layers:
-        placeFoundation(layerIndex)
+        foundationBlock = placeFoundation(layerIndex)
     
-    return foundation.getCoords(), foundation.getBlocks()
+    return foundation.getCoords(), foundationBlock
