@@ -85,4 +85,5 @@ if __name__ == '__main__':
     for house in houseList:
         house.generateRooms()
         house.build(mc)
+        house.decorate(mc)
     print('village generated!')
