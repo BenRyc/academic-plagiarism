@@ -260,7 +260,7 @@ def astar(maze, start, end):
             while Current is not None:
                 Path.append(Current.position)
                 Current = Current.parent
-                print(Path)
+                #print(Path)
             return Path[::-1] # Return reversed Path
 
         # Generate children
@@ -300,6 +300,7 @@ def astar(maze, start, end):
             child.g = CurrentNode.g + 1
             child.h = ((child.position[0] - EndNode.position[0]) ** 2) + ((child.position[1] - EndNode.position[1]) ** 2)
             multi = 15
+            
             if child.h < 200:
                 multi = 30
             if child.h < 100:
@@ -349,20 +350,26 @@ def astar(maze, start, end):
 
 import random
 mc = minecraft.Minecraft.create()
-def main():
+def main(fdoors, houselocs):
 
-    maze = [[0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 13, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 3, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 8, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0.5, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 3, 0, 0, -1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
+    #maze = [[0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+     #       [0, 13, 0, 0, -1, 0, 0, 0, 0, 0],
+      #      [0, 0, 0, 3, -1, 0, 0, 0, 0, 0],
+       #     [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+        #    [0, 8, 0, 0, -1, 0, 0, 0, 0, 0],
+         #   [0, 0, 0, 0, -1, 0.5, 0, 0, 0, 0],
+          #  [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+           # [0, 0, 0, 0, -1, 0, 0, 0, 0, 0],
+            #[0, 3, 0, 0, -1, 0, 0, 0, 0, 0],
+            #[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    
     global translated
+    bannedlocs = []
+    for i in houselocs:
+        for j in range(0,i[2]):
+            for k in range(0,i[3]):
+                bannedlocs.append([i[0]+j, i[1]+k])
+
     def getVals(listval1, listval2, translatedval):
         world = picraft.World()
         world.say("Hello mcpi_fast_query!")
@@ -417,22 +424,24 @@ def main():
         prevx = h[0].x
         nrow = []
         #print(h)
+        print(bannedlocs)
         for i in h:
             currx = i.x
-            #mc.setBlock(i,5)
+            #mc.setBlock(i,51)
             if prevx != currx:
                 maze.append(nrow)
                 nrow = [0]
                 #print("newrow")
             else:
-                if i.x == "xx" and i.y == "yy":
-                    nrow.append(-1)
+                for j in bannedlocs:
+                    if j[0] == i.x and j[1] == i.z:
+                        nrow.append(1000)
+                        print(nrow)
                 else:
                     nrow.append(i.y)
             
             prevx = i.x
-        #for i in h:
-            #mc.setBlock(i,5)
+        print(maze)
 
         #for i in range (0,100):
         #    nrow = []
@@ -473,7 +482,7 @@ def main():
             #print(z)
             y = mc.getHeight(x,z)
             #print(x,z)
-            mc.setBlock(x,y,z,246)
+            mc.setBlock(x,y,z,216)
             #print(maze)
             print(maze[0][0])
             #print(maze[(445+translated[0])][(74+translated[1])])
@@ -482,7 +491,15 @@ def main():
             print(translated[0])
         return Path
 
-    doors = [[3840,4000], [3814,3855],[3850,3830],[3810,3810],[3780, 37 90]]
+    #doors = [[3840,4000], [3814,3855],[3850,3830],[3810,3810],[3780, 3790]]
+    doors = []
+    for i in fdoors:
+        ndoor = []
+        ndoor.append(i[0])
+        ndoor.append(i[1])
+        doors.append(ndoor)
+    print(fdoors)
+    print(doors)
     mindival1 = doors[0]
     mindival2 = doors[1]
     mindist = 999999999
@@ -521,10 +538,10 @@ def main():
             start = doors[i]
             end = [p[rnum][0]-prevtrans[0],p[rnum][1]-prevtrans[1]]
             translated = [int(start[0]),int(start[1])]
-            print(start)
-            print(end)
-            print(translated)
-            print("fjafaf")
+            #print(start)
+            #print(end)
+            #print(translated)
+            #print("fjafaf")
 
         #start = [450, 0]
         #end = [400,75]
