@@ -18,7 +18,7 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
     # glowstone: 89
     # red carpet: 171,1,4
 
-    colour = random.randint(0,16)
+    colour = random.randint(0,15)
 
     # #floor lighting
     # mc.setBlocks(room.x1+3, room.y, room.z1+3, room.x2-3, room.y, room.z2-3, 89)
