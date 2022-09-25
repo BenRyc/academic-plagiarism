@@ -20,7 +20,7 @@ if __name__ == '__main__':
     ########################################################################
 
     houseList = []
-    numHouses = random.randint(5)
+    numHouses = 5
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
     minDistance = 4
