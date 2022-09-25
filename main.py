@@ -80,10 +80,21 @@ if __name__ == '__main__':
             mc.setBlock(x, y, z, blockID, blockData)
         
     ########################################################################
-    #                           GENERATE HOUSE                             #
+    #                           GENERATE HOUSES                            #
     ########################################################################
     for house in houseList:
         house.generateRooms()
+    print('village generated!')
+
+    ########################################################################
+    #                     PATHFINDING AND BUILDING                         #
+    ########################################################################
+
+    ########################################################################
+    #                             BUILD HOUSES                             #
+    ########################################################################
+
+    for house in houseList:
         house.build(mc)
         house.decorate(mc)
-    print('village generated!')
+    print('village built!')
