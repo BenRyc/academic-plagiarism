@@ -5,6 +5,7 @@ import Palettes
 from Room import Room
 
 def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z], door object)
+    
     # ID key
     # bed: 26,
     #         1 -x
