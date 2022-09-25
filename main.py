@@ -20,7 +20,7 @@ if __name__ == '__main__':
     ########################################################################
 
     houseList = []
-    numHouses = random.randint(5,15)
+    numHouses = 5
     forbiddenCoor = set()
     scanDiameter = 13 #increases after every house placement
     minDistance = 4
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         #tries a random position until it doesn't overlap with previous houses
         posFound = False
         
-        
+        loopIter = 0 
         while posFound == False:
             loopIter += 1
             if loopIter > 5:
@@ -85,4 +85,5 @@ if __name__ == '__main__':
     for house in houseList:
         house.generateRooms()
         house.build(mc)
+        house.decorate(mc)
     print('village generated!')

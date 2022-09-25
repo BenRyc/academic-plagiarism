@@ -18,6 +18,8 @@ except ImportError:
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     
+    blocksAvoid = [8, 9, 10, 11, 18, 31, 32, 37, 38, 39, 40, 78]
+    
     # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
     # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
     # north, east, south and west each store block data for that direction on the layer, each block having x, y, z data
@@ -508,7 +510,7 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
         endX = endCoord.x
         endZ = endCoord.z
         
-        mc.setBlocks(startX, startY, startZ, endX, startY - 1000, endZ, blockId, data)
+        mc.setBlocks(startX, startY, startZ, endX, startY - 10, endZ, blockId, data)
         mc.setBlocks(startX, startY + 1, startZ, endX, startY + 1000, endZ, 0)
                 
         
@@ -524,10 +526,9 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
         if layered:
             for direction in range(4):
                 coords = layer.getCardinal(direction)
-                blocks = layer.getBlocksCardinal(direction)
+                fillBlock = getBlockToFill(layer.getBlocksCardinal(direction))
                 startCoord = coords[0]
                 endCoord = coords[len(coords)-1]
-                block = blocks[0]
                 height = layer.getAvgHeight()
                 placeBlock(startCoord, endCoord, height, block.id, block.data)
                     
@@ -539,6 +540,10 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
             block = blocks[0]
             placeBlock(startCoord, endCoord, coords[0].y, block.id, block.data)
 
+    def getBlockToFill():
+        pass
+    
+    #TODO for each block in a given gardinal direction, scan a nlacklist and if the block is in a blacklist then go to the next block, default to grass
 
     layers = []
 
