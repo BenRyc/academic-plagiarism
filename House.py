@@ -272,6 +272,7 @@ class House:
         self.foundatonBlocks = []
         self.length = length
         self.width = width
+        self.frontdoor = "None"
 
         self.stories = random.randint(1, 3) # how many levels of the hopuse there are
 
@@ -336,6 +337,7 @@ class House:
                         # seting the room type
                         fDoor = fDoor + tuple('F')
                         room.doors.append(fDoor)
+                        self.frontdoor = fDoor
                         room.decor = 'front'
 
 

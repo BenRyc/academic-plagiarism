@@ -526,9 +526,11 @@ def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
         if layered:
             for direction in range(4):
                 coords = layer.getCardinal(direction)
-                fillBlock = getBlockToFill(layer.getBlocksCardinal(direction))
+                blocks = layer.getBlocksCardinal(direction)
+                #fillBlock = getBlockToFill(layer.getBlocksCardinal(direction))
                 startCoord = coords[0]
                 endCoord = coords[len(coords)-1]
+                block = blocks[0]
                 height = layer.getAvgHeight()
                 placeBlock(startCoord, endCoord, height, block.id, block.data)
                     

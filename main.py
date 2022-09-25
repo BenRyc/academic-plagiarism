@@ -7,7 +7,7 @@ from mcpi import block
 import random
 import House    
 import Terraforming
-
+import pathfinding2D
 if __name__ == '__main__':
     #INITIALISE MC AND PLAYER COOR
     mc = minecraft.Minecraft.create()
@@ -82,8 +82,19 @@ if __name__ == '__main__':
     ########################################################################
     #                           GENERATE HOUSE                             #
     ########################################################################
+    fdoors = []
+    houselocs = []
     for house in houseList:
         house.generateRooms()
+        fdoors.append(house.frontdoor)
+        houseloc = []
+        houseloc.append(house.x)
+        houseloc.append(house.z)
+        houseloc.append(house.length)
+        houseloc.append(house.width)
+        houselocs.append(houseloc)
+    for house in houseList:
         house.build(mc)
         house.decorate(mc)
+    pathfinding2D.main(fdoors, houselocs)
     print('village generated!')
