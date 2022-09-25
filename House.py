@@ -18,11 +18,11 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
     # glowstone: 89
     # red carpet: 171,1,4
 
-    colour = random.randint(0,16)
+    colour = random.randint(0,15)
 
-    #floor lighting
-    mc.setBlocks(room.x1+3, room.y, room.z1+3, room.x2-3, room.y, room.z2-3, 89)
-    mc.setBlocks(room.x1+3, room.y+1, room.z1+3, room.x2-3, room.y+1, room.z2-3, 171,colour)
+    # #floor lighting
+    # mc.setBlocks(room.x1+3, room.y, room.z1+3, room.x2-3, room.y, room.z2-3, 89)
+    # mc.setBlocks(room.x1+3, room.y+1, room.z1+3, room.x2-3, room.y+1, room.z2-3, 171,colour)
 
     #directionally dependent decorations
     if '-z' in dirWithDoor: #-z
@@ -38,6 +38,9 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         mc.setBlocks(room.x1+1, room.y+1, room.z1+2, room.x1+1, room.y+1, room.z2-1, 126,8)
         #chest
         mc.setBlock(room.x2-1, room.y+1, room.z2-1, 54, 2)
+
+        mc.setBlocks(room.x1+2, room.y, room.z1+2, room.x2-2, room.y, room.z2-3, 89)
+        mc.setBlocks(room.x1+2, room.y+1, room.z1+2, room.x2-2, room.y+1, room.z2-3, 171,colour)
         
 
     elif '+z' in dirWithDoor:
@@ -54,6 +57,8 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         #chest
         mc.setBlock(room.x1+1, room.y+1, room.z1+1, 54,3)
 
+        mc.setBlocks(room.x1+2, room.y, room.z1+3, room.x2-2, room.y, room.z2-2, 89)
+        mc.setBlocks(room.x1+2, room.y+1, room.z1+3, room.x2-2, room.y+1, room.z2-2, 171,colour)
 
     elif '+x' in dirWithDoor:
         #bed
@@ -68,6 +73,9 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         mc.setBlocks(room.x2-2, room.y+1, room.z1+1, room.x1+1, room.y+1, room.z1+1, 126,8)
         #chest
         mc.setBlock(room.x1+1, room.y+1, room.z2-1, 54, 5)
+
+        mc.setBlocks(room.x1+3, room.y, room.z1+2, room.x2-2, room.y, room.z2-2, 89)
+        mc.setBlocks(room.x1+3, room.y+1, room.z1+2, room.x2-2, room.y+1, room.z2-2, 171,colour)
 
 
     elif '-x' in dirWithDoor:
@@ -84,6 +92,9 @@ def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,
         #chest
         mc.setBlock(room.x2-1, room.y+1, room.z1+1, 54, 4)
 
+        mc.setBlocks(room.x1+2, room.y, room.z1+2, room.x2-3, room.y, room.z2-2, 89)
+        mc.setBlocks(room.x1+2, room.y+1, room.z1+2, room.x2-3, room.y+1, room.z2-2, 171,colour)
+
 def decorDining(mc, room):
     # sone slabs: 126,8
     # oak block
@@ -91,14 +102,15 @@ def decorDining(mc, room):
     middleZ = room.z1 + (room.z2-room.z1)//2
 
     #place table
-    mc.setBlocks(middleX-1, room.y+1, middleZ-1, middleX+1, room.y+1, middleZ+1, block.STONE_SLAB.withData(8))
+    mc.setBlocks(middleX-1, room.y+1, middleZ-1, middleX+1, room.y+1, middleZ+1, block.STONE_SLAB.withData(random.randint(8,15)))
     mc.setBlocks(middleX-1, room.y, middleZ-1, middleX+1, room.y, middleZ+1, 89)
     mc.setBlock(middleX, room.y+1, middleZ, 1)
 def decorLiving(mc, room):
-    pass
+    # wool: 35, 
+    mc.setBlocks(room.x1+2, room.y+1, room.z1+3, room.x1+4, room.y+1, room.z1+4, 35, 15)
+    mc.setBlock(room.x1+3, room.y+1, room.z1+4, block.STONE_SLAB_DOUBLE)
 
-
-def roomAdjinator(rooms):
+def addAdjRooms(rooms):
 
     # wall adding
 
@@ -290,7 +302,7 @@ class House:
             # recursivly makes a list of rooms
             rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+(4*i), [], None))
             # creates the adjacencies for each room
-            rooms = roomAdjinator(rooms)
+            rooms = addAdjRooms(rooms)
 
             # splits the rooms into rooms that are going to be biuld and ones that are not
             inRooms, outRooms = roomCull(rooms)
@@ -313,7 +325,12 @@ class House:
 
                 # making the front door out of one of the external walls that is not a corner
                 outWalls.intersection_update(avalableWalls)
-                fDoor = random.choice(list(outWalls))
+                choiceli = []
+                for wall in list(outWalls):
+                    if wall[0] == self.x or wall[1] == self.z:
+                        choiceli.append(wall)
+
+                fDoor = random.choice(choiceli)
 
                 for room in rooms:
                     # if the door is a part of a room it will be added to the room
@@ -396,7 +413,7 @@ class House:
 
         for room in self.inRooms:
             isStairRoom = False
-            if room.x1 == self.x and room.z1 == self.z:
+            if house.stories != 1 and room.x1 == self.x and room.z1 == self.z:
                 isStairRoom = True
             #determine which directions have doors
             dirWithDoor = []
@@ -416,7 +433,12 @@ class House:
             if not isStairRoom and len(dirWithDoor) == 1:
                 decorBedroom(mc, room, dirWithDoor)
             elif not isStairRoom:
-                decorDining(mc, room)
+                randChoice = random.randint(0,1)
+                
+                if randChoice == 0:
+                    decorLiving(mc,room)
+                else:
+                    decorDining(mc,room)
 
 
 
