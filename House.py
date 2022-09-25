@@ -4,7 +4,7 @@ import random
 import Palettes
 from Room import Room
 
-def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z], door object)
+def decorBedroom(mc, room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z], door object)
     # ID key
     # bed: 26,
     #         1 -x
@@ -83,9 +83,6 @@ def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z]
         #chest
         mc.setBlock(room.x2-1, room.y+1, room.z1+1, 54, 4)
 
-
-def decorkitchen(self, coor1, coor2, dirWithDoor):
-    pass
 def decorDining(self, coor1, coor2, dirWithDoor):
     pass
 def decorLiving(self, coor1, coor2, dirWithDoor):
@@ -409,7 +406,7 @@ class House:
             #determine what decoration type/s are appropriate
             if not isStairRoom and len(dirWithDoor) == 1:
 
-                decorBedroom(room, dirWithDoor)
+                decorBedroom(mc, room, dirWithDoor)
 
 
 
