@@ -18,7 +18,7 @@ except ImportError:
     
 def terraform(anchorX, anchorZ, sizeHouseX, sizeHouseZ):
     
-    blocksAvoid = [0, 8, 9, 10, 11, 18, 31, 32, 37, 38, 39, 40, 78]
+    blocksAvoid = [0, 8, 9, 10, 11, 18, 31, 32, 37, 38, 39, 40, 78, 81]
     
     # Layer is the general class which houses information used in a ring around the foundation (known as a layer) which has the height
     # avg height stores the average of the 4 directional heights so setblocks can be used later to speed up foundation placement
