@@ -482,7 +482,7 @@ def main():
             print(translated[0])
         return Path
 
-    doors = [[4040,4000], [4014,4055],[4050,4030],[4010,4010],[3980, 3990]]
+    doors = [[3840,4000], [3814,3855],[3850,3830],[3810,3810],[3780, 37 90]]
     mindival1 = doors[0]
     mindival2 = doors[1]
     mindist = 999999999
