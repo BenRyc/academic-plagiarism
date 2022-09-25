@@ -1,6 +1,11 @@
 # academic-plagiarism
 
---Work distribution--
+## How to Run
+Simply stand where you want a vilage and run main.py it will make a vilage around you
+
+As a bonus if you want to only generate one house you can run House.py and it will clear an area and make a house
+
+## --Work distribution--
 
 James Lee
 Student ID: s3944203
