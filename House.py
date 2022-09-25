@@ -4,10 +4,8 @@ import random
 import Palettes
 from Room import Room
 
-random.seed(1) #TODO delete
-def decorBedroom(room, dirWithDoor): 
-    # --Block key--
-    # chest
+def decorBedroom(room, dirWithDoor): #(room object, coor1:[x,y,z], coor2:[x,y,z], door object)
+    # ID key
     # bed: 26,
     #         1 -x
     #         2 -z
@@ -19,12 +17,12 @@ def decorBedroom(room, dirWithDoor):
     # slabs
     # glowstone: 89
     # red carpet: 171,1,4
-    
+
     print('decorating bedroom')
 
     #floor lighting
-    mc.setBlocks(room.x1+3, room.y, room.z+3, room.x1-3, room.y, room.z2-3, 89) 
-    mc.setBlocks(room.x1+3, room.y+1, room.z+3, room.x1-3, room.y+1, room.z2-3, 171,1,4) 
+    mc.setBlocks(room.x1+3, room.y, room.z+3, room.x1-3, room.y, room.z2-3, 89)
+    mc.setBlocks(room.x1+3, room.y+1, room.z+3, room.x1-3, room.y+1, room.z2-3, 171,1,4)
 
     #directionally dependent decorations
     if '-z' in dirWithDoor: #-z
@@ -65,7 +63,7 @@ def decorBedroom(room, dirWithDoor):
         #bookshelf
         mc.setBlocks(room.x1+1, room.y+1, room.z2-1, room.x1+1, room.y+2, room.z2-1, 47)
         mc.setblocks(room.x1+1, room.y+3, room.z2-1, room.x2-1, room.y+3, room.z2-1, 47)
-    
+
 
 def decorkitchen(self, coor1, coor2, dirWithDoor):
     pass
@@ -140,7 +138,7 @@ def roomCull(rooms):
 
         ajRooms.remove(choice)
         inRooms.append(choice)
-
+#nice
         for room in choice.adj:
             ajRooms.add(room)
 
@@ -180,50 +178,9 @@ def roomAdd(rooms):
             room.doors.append(door)
 
             # out walls
-            room.wallsOut.difference_update(list(room.adj)[adj].walls)
-
-
-        print()
-        print(len(room.adj), len(room.doors))
-        print()
-        outWalls.update(room.wallsOut)
-        avalableWalls.update(room.wallsEx)
-
-    # making the front door out of one of the external walls that is not a corner
-    outWalls.intersection_update(avalableWalls)
-    fDoor = random.choice(list(outWalls))
-    outWalls.remove(fDoor)
-
-    for room in rooms:
-        # if the door is a part of a room it will be added to the room
-        if fDoor in list(room.wallsOut):
-            # seting the side of the room the door is on
-            if fDoor[0] == room.x1:
-                fDoor = fDoor + tuple('x1')
-            elif fDoor[0] == room.x2:
-                fDoor = fDoor + tuple('x2')
-            elif fDoor[1] == room.z1:
-                fDoor = fDoor + tuple('z1')
-            elif fDoor[1] == room.z2:
-                fDoor = fDoor + tuple('z2')
-
-            # seting the room type
-            fDoor = fDoor + tuple('F')
-            room.doors.append(fDoor)
-            room.decor = 'front'
-
-    windows = outWalls
-    # makes a master list of al the windows in the house by randomly picking from the avalable blocks
-    # for i in range(0, int(len(outWalls)/1.2)):
-    #     windows.add(random.choice(list(outWalls)))
-
-    # checks if the window is a part of the room and if so adds it
-    for window in list(windows):
-        for room in rooms:
-            if window in list(room.walls):
-                room.windows.append(window)
 
     return rooms
+
 
 def roomMitosis(room):
     # Tests if the room is big enough to split
@@ -291,9 +248,8 @@ class House:
         self.length = length
         self.width = width
 
-        #TODO change
-        #self.stories = random.randint(1, 3) # how many levels of the hopuse there are
-        self.stories = 1
+        self.stories = random.randint(1, 3) # how many levels of the hopuse there are
+
         self.palette = Palettes.housePalette() # the block palet of the hous
         self.palette.pickPalette() # the block palet of the house
 
@@ -304,7 +260,7 @@ class House:
     #generate floorplan
     def generateRooms(self):
 
-        # based on the number of stories it makes the rooms
+        # based on the number of sroies it makes the rooms
         for i in range(0, self.stories):
             # recursivly makes a list of rooms
             rooms = roomMitosis(Room(self.x, self.z, self.x+self.length, self.z+self.width, self.y+(4*i), [], None))
@@ -352,20 +308,16 @@ class House:
                         room.doors.append(fDoor)
                         room.decor = 'front'
 
-                # making the front door out of one of the external walls that is not a corner
-                outWalls.intersection_update(avalableWalls)
-                fDoor = random.choice(list(outWalls))
 
         # adds doors to the rooms
         self.inRooms = roomAdd(self.inRooms)
 
     def build(self, mc):
 
-        #TODO uncomment
         # biulds the roof blocks first
-        # for room in self.inRooms:
-        #     for i in range(room.x1, room.x2+1):
-        #         mc.setBlocks(i, room.y + 4 , room.z1, i, room.y + 4 + int((i-room.x1)/2+1), room.z2, self.palette.roof)
+        for room in self.inRooms:
+            for i in range(room.x1, room.x2+1):
+                mc.setBlocks(i, room.y + 4 , room.z1, i, room.y + 4 + int((i-room.x1)/2+1), room.z2, self.palette.roof)
 
         # places the rooms in reverse order
         for room in reversed(self.inRooms):
@@ -378,10 +330,10 @@ class House:
             mc.setBlocks(room.x1, room.y, room.z2, room.x2, room.y +3, room.z2, self.palette.walls)
 
             # places the floor and ceiling
-            mc.setBlocks(room.x1+1, room.y, room.z1+1, room.x2-1, room.y, room.z2-1, self.palette.floor)
-            #mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.walls) #TODO uncomment
+            mc.setBlocks(room.x1, room.y, room.z1, room.x2, room.y, room.z2, self.palette.floor)
+            mc.setBlocks(room.x1, room.y +4, room.z1, room.x2, room.y +4, room.z2, self.palette.ceiling)
 
-            # places the 4 corner pilars s
+            # places the 4 corner pilars
             mc.setBlocks(room.x1, self.y-10, room.z1, room.x1, room.y +4, room.z1, self.palette.trim)
             mc.setBlocks(room.x1, self.y-10, room.z2, room.x1, room.y +4, room.z2, self.palette.trim)
             mc.setBlocks(room.x2, self.y-10, room.z1, room.x2, room.y +4, room.z1, self.palette.trim)
@@ -415,8 +367,8 @@ class House:
     def decorate(self,mc):
         #door facing: '1' is pos, '2' is neg
         #TODO iterate through every room object and decide the decor type, decorate it
-        
-    
+
+
         for room in self.inRooms:
             #determine which directions have doors
             dirWithDoor = []
@@ -441,7 +393,7 @@ class House:
 
 
 if __name__ == '__main__':
-    random.seed(1) #TODO delete
+    # random.seed(1) #TODO delete
     mc = minecraft.Minecraft.create()
 
     mc.postToChat("House main")
@@ -452,10 +404,13 @@ if __name__ == '__main__':
 
     house = House(int(x), int(y), int(z), 16, 16)
 
-    
+
     house.generateRooms()
     house.build(mc)
     house.decorate(mc)
 
     # for i in range(12):
-    #     mc.setBlock(x, y, z+i, block.DOOR_WOOD.withData(i))
+    #     mc.setBlock(x, y, z+i, block.BED.withData(i))
+    #
+    # mc.setBlock(x+5, y, z+2, block.BED.withData(2))
+    # mc.setBlock(x+4, y, z+2, block.BED.withData(9))
